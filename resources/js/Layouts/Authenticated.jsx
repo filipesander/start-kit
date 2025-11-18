@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Topbar from '@/Layouts/Components/Topbar';
+import Header from '@/Layouts/Components/Header';
 import { Head, usePage } from '@inertiajs/react';
 import { SnackbarProvider } from 'notistack';
 import {Box, Button, useMediaQuery} from '@mui/material';
@@ -67,15 +68,30 @@ const Authenticated = ({ title, children }) => {
           >
             <FlashNotifications />
 
-            <Box sx={{ display: 'flex' }}>
+            <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+              {/* Sidebar */}
               <Sidebar />
 
-              {isMobile && (
-                <Topbar />
-              )}
+              {/* Main Content Area */}
+              <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+                {/* Header - Desktop */}
+                {!isMobile && <Header />}
 
-              <Box component='main' sx={{ flexGrow: 1, p: 3, paddingTop: isMobile ? '80px' : 3 }}>
-                {React.Children.map(children, (child) => React.cloneElement(child))}
+                {/* Topbar - Mobile */}
+                {isMobile && <Topbar />}
+
+                {/* Page Content */}
+                <Box
+                  component='main'
+                  sx={{
+                    flexGrow: 1,
+                    p: 3,
+                    mt: isMobile ? '64px' : '70px', // Margin top for fixed header
+                    backgroundColor: 'background.default',
+                  }}
+                >
+                  {React.Children.map(children, (child) => React.cloneElement(child))}
+                </Box>
               </Box>
             </Box>
           </SidebarContext.Provider>

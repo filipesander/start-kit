@@ -4,6 +4,7 @@ import MuiAppBar from '@mui/material/AppBar';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import UserMenu from "@/Layouts/Components/UserMenu";
+import EnvironmentsMenu from "@/Layouts/Components/EnvironmentsMenu";
 import { SidebarContext } from "../Authenticated";
 
 const AppBar = styled(MuiAppBar)(({ theme, open, width }) => ({
@@ -39,15 +40,11 @@ export default function Topbar({ }) {
           {!sidebar.isOpen && <MenuIcon />}
         </IconButton>
 
+        <EnvironmentsMenu />
+
         <Box sx={{ flexGrow: 1 }} />
 
-        <Box sx={(theme) => ({ display: 'none', [theme.breakpoints.up('md')]: { display: 'flex' } })}>
-          <UserMenu />
-        </Box>
-
-        <Box sx={(theme) => ({ display: 'flex', [theme.breakpoints.up('md')]: { display: 'none' } })}>
-          <UserMenu />
-        </Box>
+        <UserMenu />
       </Toolbar>
     </AppBar>
   );

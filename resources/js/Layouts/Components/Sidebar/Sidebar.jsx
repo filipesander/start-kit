@@ -3,14 +3,13 @@ import {Box, List, ListItemText, styled, useMediaQuery} from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
 import {router, usePage} from '@inertiajs/react';
 import {SidebarContext} from '../../Authenticated';
-import {Brand, CustomEnvironmentLabel, StyledNavItem, StyledNavItemIcon} from "@/Layouts/Components/Sidebar/styles";
+import {CustomEnvironmentLabel, StyledNavItem, StyledNavItemIcon} from "@/Layouts/Components/Sidebar/styles";
 import * as Unicons from '@iconscout/react-unicons';
-import {UserLoggedCard} from "@/Layouts/Components/UserLoggedCard/UserLoggedCard";
 import classNames from "classnames";
-import ApplicationLogo from "@/Components/ApplicationLogo";
 const openedMixin = (theme, width) => ({
   width: width,
   height: '100vh',
+  paddingTop: '70px', // Space for header
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen,
@@ -37,25 +36,19 @@ export default function Sidebar({}) {
   const {auth: {user}} = usePage().props;
   const isMobile = useMediaQuery('(max-width: 676px)');
 
+  // Get only current environment modules
+  const currentEnvironment = user.current_environment;
+  const currentModules = user.menu.find(env => env.slug === currentEnvironment?.slug)?.modules || [];
+
   return (
     <Drawer
       variant={isMobile ? 'temporary' : 'persistent'}
       open={isMobile ? sidebar.isOpen : true}
       width={sidebar.width}
     >
-      <Brand>
-        <ApplicationLogo size='3rem' />
-      </Brand>
-
-      <UserLoggedCard/>
-
-      {user.menu.map((environment) => (
-        <>
-          <CustomEnvironmentLabel>{environment.label}</CustomEnvironmentLabel>
-          <NavSection data={environment.modules}/>
-        </>
-      ))}
-
+      <Box sx={{ pt: 2 }}>
+        <NavSection data={currentModules}/>
+      </Box>
       <LogOut />
     </Drawer>
   );
