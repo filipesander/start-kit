@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
 import { Link as InertiaLink, useForm } from '@inertiajs/react';
 import Guest from '@/Layouts/Guest';
-import { Button, Checkbox, CircularProgress, FormControlLabel, Grid, Link, TextField } from '@mui/material';
-import { Alert } from '@mui/material';
+import { Box, Button, Checkbox, CircularProgress, FormControlLabel, Link, TextField, InputAdornment, IconButton, Alert, alpha } from '@mui/material';
+import { Visibility, VisibilityOff, Email, Lock } from '@mui/icons-material';
 
 export default function Login({ status, denied, canResetPassword }) {
+  const [showPassword, setShowPassword] = React.useState(false);
+
   const { data, setData, post, processing, errors, reset } = useForm({
     email: '',
     password: '',
@@ -23,82 +25,190 @@ export default function Login({ status, denied, canResetPassword }) {
 
   const submit = (e) => {
     e.preventDefault();
-
     post(route('panel.login'));
+  };
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
     <Guest title='Entrar'>
-      {status && <Alert severity='success'>{status}</Alert>}
-      {denied && <Alert severity='error'>{denied}</Alert>}
+      <Box sx={{ width: '100%' }}>
+        {status && (
+          <Alert
+            severity='success'
+            sx={{
+              mb: 3,
+              borderRadius: 2,
+              border: (theme) => `1px solid ${alpha(theme.palette.success.main, 0.3)}`,
+            }}
+          >
+            {status}
+          </Alert>
+        )}
 
-      <form onSubmit={submit} style={{ width: '100%' }}>
-        <TextField
-          variant='outlined'
-          margin='normal'
-          id='email'
-          name='email'
-          type='email'
-          label='Email'
-          autoComplete='email'
-          value={data.email}
-          onChange={onHandleChange}
-          error={!!errors.email}
-          helperText={errors.email}
-          disabled={processing}
-          fullWidth
-          required
-          autoFocus
-        />
+        {denied && (
+          <Alert
+            severity='error'
+            sx={{
+              mb: 3,
+              borderRadius: 2,
+              border: (theme) => `1px solid ${alpha(theme.palette.error.main, 0.3)}`,
+            }}
+          >
+            {denied}
+          </Alert>
+        )}
 
-        <TextField
-          variant='outlined'
-          margin='normal'
-          name='password'
-          label='Senha'
-          type='password'
-          id='password'
-          autoComplete='current-password'
-          value={data.password}
-          onChange={onHandleChange}
-          error={!!errors.password}
-          helperText={errors.password}
-          disabled={processing}
-          required
-          fullWidth
-        />
+        <form onSubmit={submit}>
+          <TextField
+            variant='outlined'
+            margin='normal'
+            id='email'
+            name='email'
+            type='email'
+            label='Email'
+            placeholder='seu@email.com'
+            autoComplete='email'
+            value={data.email}
+            onChange={onHandleChange}
+            error={!!errors.email}
+            helperText={errors.email}
+            disabled={processing}
+            fullWidth
+            required
+            autoFocus
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Email sx={{ color: 'text.secondary' }} />
+                </InputAdornment>
+              ),
+            }}
+            sx={{
+              mb: 2,
+              '& .MuiOutlinedInput-root': {
+                '&.Mui-focused': {
+                  '& .MuiInputAdornment-root svg': {
+                    color: 'primary.main',
+                  },
+                },
+              },
+            }}
+          />
 
-        <FormControlLabel
-          label='Manter logado'
-          control={
-            <Checkbox
-              value='remember'
-              color='primary'
-              checked={data.remember}
-              onChange={onHandleChange}
-              disabled={processing}
+          <TextField
+            variant='outlined'
+            margin='normal'
+            name='password'
+            label='Senha'
+            type={showPassword ? 'text' : 'password'}
+            id='password'
+            placeholder='••••••••'
+            autoComplete='current-password'
+            value={data.password}
+            onChange={onHandleChange}
+            error={!!errors.password}
+            helperText={errors.password}
+            disabled={processing}
+            required
+            fullWidth
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Lock sx={{ color: 'text.secondary' }} />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    edge="end"
+                    size="small"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+            sx={{
+              mb: 1,
+              '& .MuiOutlinedInput-root': {
+                '&.Mui-focused': {
+                  '& .MuiInputAdornment-root svg': {
+                    color: 'primary.main',
+                  },
+                },
+              },
+            }}
+          />
+
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  value='remember'
+                  color='primary'
+                  checked={data.remember}
+                  onChange={onHandleChange}
+                  disabled={processing}
+                  name='remember'
+                />
+              }
+              label='Manter logado'
             />
-          }
-        />
 
-        <Grid container justifyContent='space-between'>
-          {canResetPassword && (
-            <Link component={InertiaLink} href={route('panel.password.request')}>
-              Esqueceu a senha?
-            </Link>
-          )}
+            {canResetPassword && (
+              <Link
+                component={InertiaLink}
+                href={route('panel.password.request')}
+                sx={{
+                  textDecoration: 'none',
+                  fontWeight: 600,
+                  fontSize: '0.875rem',
+                  '&:hover': {
+                    textDecoration: 'underline',
+                  },
+                }}
+              >
+                Esqueceu a senha?
+              </Link>
+            )}
+          </Box>
 
-          {!processing && (
-            <Button variant="contained" color="primary" type='submit'>
-              Entrar
-            </Button>
-          )}
-
-          {processing && (
-            <CircularProgress />
-          )}
-        </Grid>
-      </form>
+          <Button
+            variant="contained"
+            color="primary"
+            type='submit'
+            fullWidth
+            disabled={processing}
+            sx={{
+              py: 1.5,
+              fontSize: '1rem',
+              fontWeight: 600,
+              textTransform: 'none',
+              borderRadius: 3,
+              background: (theme) => theme.palette.gradients.primary,
+              boxShadow: '0 4px 12px rgba(124, 58, 237, 0.3)',
+              '&:hover': {
+                boxShadow: '0 8px 24px rgba(124, 58, 237, 0.4)',
+                transform: 'translateY(-2px)',
+              },
+              '&:disabled': {
+                background: (theme) => alpha(theme.palette.primary.main, 0.5),
+              },
+            }}
+          >
+            {processing ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              'Entrar'
+            )}
+          </Button>
+        </form>
+      </Box>
     </Guest>
   );
 }
