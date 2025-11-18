@@ -4,6 +4,7 @@ import * as Unicons from '@iconscout/react-unicons';
 import UserMenu from './UserMenu';
 import EnvironmentsMenu from './EnvironmentsMenu';
 import NotificationsMenu from './NotificationsMenu';
+import ThemeToggle from './ThemeToggle';
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   background: theme.palette.background.paper,
@@ -55,6 +56,9 @@ export default function Header() {
         </Box>
 
         <Box sx={{ flexGrow: 1 }} />
+
+        {/* Theme Toggle */}
+        <ThemeToggle />
 
         {/* Notifications */}
         <NotificationsMenu />

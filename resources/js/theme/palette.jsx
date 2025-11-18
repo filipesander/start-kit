@@ -83,37 +83,42 @@ const GRADIENTS = {
   cyan: 'linear-gradient(135deg, #06B6D4 0%, #8B5CF6 100%)',
 };
 
-const palette = {
-  common: { black: '#000', white: '#fff' },
-  primary: PRIMARY,
-  secondary: SECONDARY,
-  info: INFO,
-  success: SUCCESS,
-  warning: WARNING,
-  error: ERROR,
-  grey: GREY,
-  gradients: GRADIENTS,  // Adding gradients to palette
-  divider: alpha(GREY[500], 0.24),
-  text: {
-    primary: GREY[800],
-    secondary: GREY[600],
-    disabled: GREY[500],
-  },
-  background: {
-    paper: '#fff',
-    default: '#F9FAFB',  // Slightly lighter
-    neutral: GREY[200],
-  },
-  action: {
-    active: GREY[600],
-    hover: alpha(GREY[500], 0.08),
-    selected: alpha(GREY[500], 0.16),
-    disabled: alpha(GREY[500], 0.8),
-    disabledBackground: alpha(GREY[500], 0.24),
-    focus: alpha(GREY[500], 0.24),
-    hoverOpacity: 0.08,
-    disabledOpacity: 0.48,
-  },
+const palette = (mode = 'light') => {
+  const isLight = mode === 'light';
+
+  return {
+    mode,
+    common: { black: '#000', white: '#fff' },
+    primary: PRIMARY,
+    secondary: SECONDARY,
+    info: INFO,
+    success: SUCCESS,
+    warning: WARNING,
+    error: ERROR,
+    grey: GREY,
+    gradients: GRADIENTS,
+    divider: alpha(isLight ? GREY[500] : GREY[600], 0.24),
+    text: {
+      primary: isLight ? GREY[800] : '#fff',
+      secondary: isLight ? GREY[600] : GREY[400],
+      disabled: isLight ? GREY[500] : GREY[600],
+    },
+    background: {
+      paper: isLight ? '#fff' : GREY[800],
+      default: isLight ? '#F9FAFB' : GREY[900],
+      neutral: isLight ? GREY[200] : GREY[700],
+    },
+    action: {
+      active: isLight ? GREY[600] : GREY[400],
+      hover: alpha(isLight ? GREY[500] : GREY[600], 0.08),
+      selected: alpha(isLight ? GREY[500] : PRIMARY.main, 0.16),
+      disabled: alpha(isLight ? GREY[500] : GREY[600], 0.8),
+      disabledBackground: alpha(isLight ? GREY[500] : GREY[600], 0.24),
+      focus: alpha(isLight ? GREY[500] : GREY[600], 0.24),
+      hoverOpacity: 0.08,
+      disabledOpacity: 0.48,
+    },
+  };
 };
 
 export default palette;

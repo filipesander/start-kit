@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import CssBaseline from '@mui/material/CssBaseline';
 import Topbar from '@/Layouts/Components/Topbar';
 import Header from '@/Layouts/Components/Header';
 import { Head, usePage } from '@inertiajs/react';
@@ -8,7 +7,6 @@ import {Box, Button, useMediaQuery} from '@mui/material';
 import { Close } from '@mui/icons-material';
 import FlashNotifications from './Components/FlashNotifications';
 import Sidebar from "@/Layouts/Components/Sidebar";
-import ThemeProvider from "@/theme";
 
 const defaultSidebarConfig = {
   width: 280,
@@ -44,59 +42,55 @@ const Authenticated = ({ title, children }) => {
 
   return (
     <>
-      <ThemeProvider>
-        <CssBaseline />
+      <Head title={user.current_module.label || title} />
 
-        <Head title={user.current_module.label || title} />
-
-        <SnackbarProvider
-          maxSnack={15}
-          ref={notistackRef}
-          action={notistackDismissAction}
-          autoHideDuration={10000}
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
+      <SnackbarProvider
+        maxSnack={15}
+        ref={notistackRef}
+        action={notistackDismissAction}
+        autoHideDuration={10000}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <SidebarContext.Provider
+          value={{
+            ...defaultSidebarConfig,
+            isOpen: sidebarIsOpen,
+            toggleIsOpen: toggleSidebarIsOpen,
           }}
         >
-          <SidebarContext.Provider
-            value={{
-              ...defaultSidebarConfig,
-              isOpen: sidebarIsOpen,
-              toggleIsOpen: toggleSidebarIsOpen,
-            }}
-          >
-            <FlashNotifications />
+          <FlashNotifications />
 
-            <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-              {/* Sidebar */}
-              <Sidebar />
+          <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+            {/* Sidebar */}
+            <Sidebar />
 
-              {/* Main Content Area */}
-              <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                {/* Header - Desktop */}
-                {!isMobile && <Header />}
+            {/* Main Content Area */}
+            <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+              {/* Header - Desktop */}
+              {!isMobile && <Header />}
 
-                {/* Topbar - Mobile */}
-                {isMobile && <Topbar />}
+              {/* Topbar - Mobile */}
+              {isMobile && <Topbar />}
 
-                {/* Page Content */}
-                <Box
-                  component='main'
-                  sx={{
-                    flexGrow: 1,
-                    p: 3,
-                    mt: isMobile ? '64px' : '70px', // Margin top for fixed header
-                    backgroundColor: 'background.default',
-                  }}
-                >
-                  {React.Children.map(children, (child) => React.cloneElement(child))}
-                </Box>
+              {/* Page Content */}
+              <Box
+                component='main'
+                sx={{
+                  flexGrow: 1,
+                  p: 3,
+                  mt: isMobile ? '64px' : '70px', // Margin top for fixed header
+                  backgroundColor: 'background.default',
+                }}
+              >
+                {React.Children.map(children, (child) => React.cloneElement(child))}
               </Box>
             </Box>
-          </SidebarContext.Provider>
-        </SnackbarProvider>
-      </ThemeProvider>
+          </Box>
+        </SidebarContext.Provider>
+      </SnackbarProvider>
     </>
   );
 }

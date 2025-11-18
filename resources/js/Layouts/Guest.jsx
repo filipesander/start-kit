@@ -1,15 +1,12 @@
 import React from 'react';
 import { Head } from '@inertiajs/react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
-import { Box, Card, CardContent, CssBaseline, Typography, alpha } from '@mui/material';
-import { ThemeProvider } from '@/Themes/ThemeContext';
+import { Box, Card, CardContent, Typography, alpha } from '@mui/material';
 
 const Guest = ({ title, children }) => {
   return (
     <>
-      <ThemeProvider>
-        <Head title={title} />
-        <CssBaseline />
+      <Head title={title} />
 
         <Box
           sx={{
@@ -140,7 +137,6 @@ const Guest = ({ title, children }) => {
             </Typography>
           </Box>
         </Box>
-      </ThemeProvider>
     </>
   );
 };

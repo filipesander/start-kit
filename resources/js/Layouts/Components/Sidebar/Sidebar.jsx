@@ -16,11 +16,15 @@ const openedMixin = (theme, width) => ({
   }),
   overflowX: 'hidden',
   overflowY: 'auto',
-  background: 'linear-gradient(180deg, rgba(124, 58, 237, 0.03) 0%, rgba(6, 182, 212, 0.03) 100%)',
+  background: theme.palette.mode === 'dark'
+    ? `linear-gradient(180deg, rgba(124, 58, 237, 0.08) 0%, rgba(6, 182, 212, 0.08) 100%)`
+    : `linear-gradient(180deg, rgba(124, 58, 237, 0.03) 0%, rgba(6, 182, 212, 0.03) 100%)`,
   backdropFilter: 'blur(10px)',
-  backgroundColor: 'rgba(255, 255, 255, 0.95)',
-  borderRight: '1px solid rgba(124, 58, 237, 0.1)',
-  boxShadow: '4px 0 24px rgba(124, 58, 237, 0.08)',
+  backgroundColor: theme.palette.background.paper,
+  borderRight: `1px solid ${theme.palette.divider}`,
+  boxShadow: theme.palette.mode === 'dark'
+    ? '4px 0 24px rgba(0, 0, 0, 0.3)'
+    : '4px 0 24px rgba(124, 58, 237, 0.08)',
 });
 
 const Drawer = styled(MuiDrawer)(({theme, width}) => ({
