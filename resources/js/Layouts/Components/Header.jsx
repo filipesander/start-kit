@@ -1,9 +1,9 @@
 import React from 'react';
-import { Box, AppBar, Toolbar, Typography, IconButton, alpha, styled } from '@mui/material';
+import { Box, AppBar, Toolbar, Typography, alpha, styled } from '@mui/material';
 import * as Unicons from '@iconscout/react-unicons';
 import UserMenu from './UserMenu';
 import EnvironmentsMenu from './EnvironmentsMenu';
-import { Notifications } from '@mui/icons-material';
+import NotificationsMenu from './NotificationsMenu';
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   background: theme.palette.background.paper,
@@ -57,30 +57,7 @@ export default function Header() {
         <Box sx={{ flexGrow: 1 }} />
 
         {/* Notifications */}
-        <IconButton
-          sx={{
-            mr: 2,
-            position: 'relative',
-            '&:hover': {
-              backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.08),
-            },
-          }}
-        >
-          <Notifications />
-          <Box
-            sx={{
-              position: 'absolute',
-              top: 8,
-              right: 8,
-              width: 8,
-              height: 8,
-              borderRadius: '50%',
-              backgroundColor: 'error.main',
-              border: '2px solid',
-              borderColor: 'background.paper',
-            }}
-          />
-        </IconButton>
+        <NotificationsMenu />
 
         {/* User Menu with Avatar */}
         <UserMenu />
