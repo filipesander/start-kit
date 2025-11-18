@@ -50,7 +50,7 @@ export default function Header() {
         </Box>
 
         {/* Environment Selector */}
-        <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+        <Box sx={{ display: { xs: 'none', md: 'block' }, ml: 8 }}>
           <EnvironmentsMenu />
         </Box>
 
