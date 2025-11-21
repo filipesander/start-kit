@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {Box, List, ListItemText, styled, useMediaQuery} from '@mui/material';
+import {Box, List, ListItemText, styled, useMediaQuery, Typography, alpha} from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
 import {router, usePage} from '@inertiajs/react';
 import {SidebarContext} from '../../Authenticated';
@@ -9,7 +9,6 @@ import classNames from "classnames";
 const openedMixin = (theme, width) => ({
   width: width,
   height: '100vh',
-  paddingTop: '70px', // Space for header
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen,
@@ -25,6 +24,7 @@ const openedMixin = (theme, width) => ({
   boxShadow: theme.palette.mode === 'dark'
     ? '4px 0 24px rgba(0, 0, 0, 0.3)'
     : '4px 0 24px rgba(124, 58, 237, 0.08)',
+  zIndex: theme.zIndex.drawer + 1,
 });
 
 const Drawer = styled(MuiDrawer)(({theme, width}) => ({
@@ -50,6 +50,57 @@ export default function Sidebar({}) {
       open={isMobile ? sidebar.isOpen : true}
       width={sidebar.width}
     >
+      {/* Logo Section */}
+      <Box
+        sx={{
+          height: '70px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          px: 2,
+          borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
+          background: (theme) => theme.palette.mode === 'dark'
+            ? alpha(theme.palette.background.paper, 0.6)
+            : alpha(theme.palette.background.paper, 0.8),
+          backdropFilter: 'blur(10px)',
+        }}
+      >
+        <Box
+          sx={{
+            width: 44,
+            height: 44,
+            borderRadius: 2.5,
+            background: (theme) => theme.palette.gradients?.primary || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            mr: 1.5,
+            boxShadow: (theme) => `0 8px 16px ${alpha(theme.palette.primary.main, 0.4)}`,
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              transform: 'scale(1.05) rotate(-5deg)',
+              boxShadow: (theme) => `0 12px 24px ${alpha(theme.palette.primary.main, 0.5)}`,
+            },
+          }}
+        >
+          <Unicons.UilRocket size={26} color="#fff" />
+        </Box>
+        <Typography
+          variant="h6"
+          sx={{
+            fontWeight: 700,
+            background: (theme) => theme.palette.gradients?.primary || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            fontSize: '1.25rem',
+            letterSpacing: '-0.5px',
+          }}
+        >
+          Sistema
+        </Typography>
+      </Box>
+
       <Box sx={{ pt: 2 }}>
         <NavSection data={currentModules}/>
       </Box>
