@@ -36,9 +36,11 @@ export default function UserMenu() {
           px: 1.5,
           py: 0.75,
           borderRadius: 3,
-          transition: 'all 0.2s ease',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
           '&:hover': {
-            backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.05),
+            backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.08),
+            transform: 'translateY(-2px)',
+            boxShadow: (theme) => `0 4px 12px ${alpha(theme.palette.primary.main, 0.2)}`,
           },
         }}
       >
@@ -58,12 +60,17 @@ export default function UserMenu() {
             width: 40,
             height: 40,
             border: (theme) => `2px solid ${theme.palette.background.paper}`,
-            boxShadow: (theme) => `0 0 0 2px ${alpha(theme.palette.primary.main, 0.2)}`,
+            boxShadow: (theme) => theme.palette.mode === 'dark'
+              ? `0 0 0 2px ${alpha(theme.palette.primary.main, 0.4)}, 0 4px 12px ${alpha(theme.palette.primary.main, 0.3)}`
+              : `0 0 0 2px ${alpha(theme.palette.primary.main, 0.2)}, 0 2px 8px ${alpha(theme.palette.common.black, 0.1)}`,
             cursor: 'pointer',
-            transition: 'all 0.3s ease',
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            background: (theme) => theme.palette.gradients?.primary || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
             '&:hover': {
-              transform: 'scale(1.05)',
-              boxShadow: (theme) => `0 0 0 3px ${alpha(theme.palette.primary.main, 0.3)}`,
+              transform: 'scale(1.05) rotate(-5deg)',
+              boxShadow: (theme) => theme.palette.mode === 'dark'
+                ? `0 0 0 3px ${alpha(theme.palette.primary.main, 0.6)}, 0 8px 20px ${alpha(theme.palette.primary.main, 0.4)}`
+                : `0 0 0 3px ${alpha(theme.palette.primary.main, 0.3)}, 0 4px 16px ${alpha(theme.palette.common.black, 0.15)}`,
             },
           }}
         >
@@ -76,6 +83,7 @@ export default function UserMenu() {
         open={isMenuOpen}
         onClose={handleMenuClose}
         onClick={handleMenuClose}
+        disableScrollLock={true}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         PaperProps={{

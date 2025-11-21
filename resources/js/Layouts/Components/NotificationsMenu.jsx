@@ -112,10 +112,11 @@ export default function NotificationsMenu() {
       <IconButton
         onClick={handleOpen}
         sx={{
-          mr: 2,
           position: 'relative',
+          transition: 'all 0.3s ease',
           '&:hover': {
             backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.08),
+            transform: 'scale(1.1)',
           },
         }}
       >
@@ -128,6 +129,7 @@ export default function NotificationsMenu() {
         anchorEl={anchorEl}
         open={isOpen}
         onClose={handleClose}
+        disableScrollLock={true}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         PaperProps={{
