@@ -99,6 +99,7 @@ export default function EnvironmentsMenu() {
       id={menuId}
       open={isMenuOpen}
       onClose={handleMenuClose}
+      disableScrollLock={true}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
       transformOrigin={{ vertical: 'top', horizontal: 'left' }}
       PaperProps={{
