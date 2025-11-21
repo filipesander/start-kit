@@ -45,7 +45,7 @@ export default function Header() {
         {/* Environment Selector */}
         <Box
           sx={{
-            display: { xs: 'none', md: 'flex' },
+            display: 'flex',
             alignItems: 'center',
             gap: 2,
           }}

@@ -241,30 +241,94 @@ function LogOut() {
     method: 'post',
   });
 
-  const logoutContent = (
-    <List disablePadding sx={{p: 1, paddingTop: 0}}>
-      <StyledNavItem
-        onClick={handleLogout}
+  const logoutButton = (
+    <Box
+      onClick={handleLogout}
+      sx={{
+        mx: 1,
+        mb: 2,
+        mt: 'auto',
+        p: sidebar.isCollapsed ? 1.5 : 2,
+        borderRadius: 3,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: sidebar.isCollapsed ? 'center' : 'flex-start',
+        gap: 1.5,
+        cursor: 'pointer',
+        position: 'relative',
+        overflow: 'hidden',
+        background: (theme) => theme.palette.mode === 'dark'
+          ? alpha(theme.palette.error.main, 0.1)
+          : alpha(theme.palette.error.main, 0.05),
+        border: (theme) => `1px solid ${alpha(theme.palette.error.main, 0.2)}`,
+        color: 'error.main',
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        '&:before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: (theme) => `linear-gradient(135deg, ${alpha(theme.palette.error.main, 0)} 0%, ${alpha(theme.palette.error.main, 0.1)} 100%)`,
+          opacity: 0,
+          transition: 'opacity 0.3s ease',
+        },
+        '&:hover': {
+          transform: 'translateY(-2px)',
+          background: (theme) => theme.palette.mode === 'dark'
+            ? alpha(theme.palette.error.main, 0.15)
+            : alpha(theme.palette.error.main, 0.08),
+          borderColor: (theme) => alpha(theme.palette.error.main, 0.4),
+          boxShadow: (theme) => `0 8px 16px ${alpha(theme.palette.error.main, 0.25)}`,
+          '&:before': {
+            opacity: 1,
+          },
+        },
+      }}
+    >
+      <Box
         sx={{
-          justifyContent: sidebar.isCollapsed ? 'center' : 'flex-start',
-          px: sidebar.isCollapsed ? 1 : 2,
+          width: 36,
+          height: 36,
+          borderRadius: 2,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: (theme) => alpha(theme.palette.error.main, 0.15),
+          color: 'error.main',
+          transition: 'all 0.3s ease',
+          zIndex: 1,
+          '.MuiBox-root:hover &': {
+            transform: 'rotate(-10deg) scale(1.1)',
+            background: (theme) => alpha(theme.palette.error.main, 0.25),
+          },
         }}
       >
-        <StyledNavItemIcon sx={{ mr: sidebar.isCollapsed ? 0 : 2, minWidth: sidebar.isCollapsed ? 'auto' : '40px' }}>
-          <Unicons.UilSignout size={24} />
-        </StyledNavItemIcon>
-        {!sidebar.isCollapsed && <ListItemText disableTypography primary='Sair' />}
-      </StyledNavItem>
-    </List>
+        <Unicons.UilSignout size={20} />
+      </Box>
+      {!sidebar.isCollapsed && (
+        <Typography
+          variant="body2"
+          sx={{
+            fontWeight: 700,
+            fontSize: '0.875rem',
+            zIndex: 1,
+          }}
+        >
+          Sair
+        </Typography>
+      )}
+    </Box>
   );
 
   if (sidebar.isCollapsed) {
     return (
       <Tooltip title="Sair" placement="right" arrow>
-        {logoutContent}
+        {logoutButton}
       </Tooltip>
     );
   }
 
-  return logoutContent;
+  return logoutButton;
 }

@@ -15,9 +15,16 @@ export default function EnvironmentsMenu() {
     return environment.slug !== 'profile';
   });
 
-  if (environments.length <= 1 && user.current_environment.slug !== 'profile') {
+  const currentEnvironment = user.current_environment;
+
+  // Se for profile, não mostra o seletor
+  if (currentEnvironment.slug === 'profile') {
     return (<></>);
   }
+
+  // Debug: mostrar quantos ambientes existem
+  console.log('Ambientes disponíveis:', environments.length, environments);
+  console.log('Ambiente atual:', currentEnvironment);
 
   const [anchorEl, setAnchorEl] = useState();
 
@@ -25,7 +32,15 @@ export default function EnvironmentsMenu() {
 
   const menuId = 'environments-menu';
 
-  const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
+  // Sempre permite abrir o menu se houver pelo menos 1 ambiente
+  const hasMultipleEnvironments = environments.length > 0;
+
+  const handleMenuOpen = (event) => {
+    console.log('Clicou no menu, ambientes:', environments.length);
+    if (hasMultipleEnvironments) {
+      setAnchorEl(event.currentTarget);
+    }
+  };
 
   const handleMenuClose = () => setAnchorEl(null);
 
@@ -35,7 +50,6 @@ export default function EnvironmentsMenu() {
     return router.visit(route(module.route));
   };
 
-  const currentEnvironment = user.current_environment;
   const CurrentIcon = Unicons[currentEnvironment.icon] || Unicons.UilApps;
 
   return <>
@@ -44,7 +58,7 @@ export default function EnvironmentsMenu() {
       aria-controls={menuId}
       aria-haspopup="true"
       onClick={handleMenuOpen}
-      endIcon={<KeyboardArrowDownIcon />}
+      endIcon={environments.length > 1 ? <KeyboardArrowDownIcon /> : null}
       sx={{
         color: 'text.primary',
         textTransform: 'none',
@@ -60,12 +74,13 @@ export default function EnvironmentsMenu() {
         fontSize: '0.875rem',
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         boxShadow: (theme) => `0 2px 8px ${alpha(theme.palette.primary.main, 0.1)}`,
-        '&:hover': {
+        cursor: hasMultipleEnvironments ? 'pointer' : 'default',
+        '&:hover': hasMultipleEnvironments ? {
           background: (theme) => `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.12)} 0%, ${alpha(theme.palette.secondary.main, 0.08)} 100%)`,
           transform: 'translateY(-2px)',
           boxShadow: (theme) => `0 4px 16px ${alpha(theme.palette.primary.main, 0.2)}`,
           borderColor: (theme) => alpha(theme.palette.primary.main, 0.3),
-        },
+        } : {},
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -97,7 +112,7 @@ export default function EnvironmentsMenu() {
     <Menu
       anchorEl={anchorEl}
       id={menuId}
-      open={isMenuOpen}
+      open={isMenuOpen && hasMultipleEnvironments}
       onClose={handleMenuClose}
       disableScrollLock={true}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
