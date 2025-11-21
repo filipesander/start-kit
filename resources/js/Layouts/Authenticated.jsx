@@ -10,8 +10,11 @@ import Sidebar from "@/Layouts/Components/Sidebar";
 
 const defaultSidebarConfig = {
   width: 280,
+  collapsedWidth: 80,
   isOpen: false,
+  isCollapsed: false,
   toggleIsOpen: () => { },
+  toggleCollapsed: () => { },
 };
 export const SidebarContext = React.createContext(defaultSidebarConfig);
 const Authenticated = ({ title, children }) => {
@@ -22,11 +25,22 @@ const Authenticated = ({ title, children }) => {
   } = usePage().props;
 
   const [sidebarIsOpen, setSidebarIsOpen] = useState(defaultSidebarConfig.isOpen);
+  const [sidebarIsCollapsed, setSidebarIsCollapsed] = useState(() => {
+    // Recupera o estado do localStorage
+    const saved = localStorage.getItem('sidebarCollapsed');
+    return saved ? JSON.parse(saved) : false;
+  });
   const isMobile = useMediaQuery('(max-width: 676px)');
 
   const toggleSidebarIsOpen = () => {
     const isOpen = !sidebarIsOpen;
     setSidebarIsOpen(isOpen);
+  };
+
+  const toggleSidebarCollapsed = () => {
+    const collapsed = !sidebarIsCollapsed;
+    setSidebarIsCollapsed(collapsed);
+    localStorage.setItem('sidebarCollapsed', JSON.stringify(collapsed));
   };
 
   const notistackRef = React.createRef();
@@ -58,7 +72,9 @@ const Authenticated = ({ title, children }) => {
           value={{
             ...defaultSidebarConfig,
             isOpen: sidebarIsOpen,
+            isCollapsed: sidebarIsCollapsed,
             toggleIsOpen: toggleSidebarIsOpen,
+            toggleCollapsed: toggleSidebarCollapsed,
           }}
         >
           <FlashNotifications />
