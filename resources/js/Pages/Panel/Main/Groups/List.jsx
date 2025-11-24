@@ -8,6 +8,7 @@ import DefaultPage from "@/Layouts/Components/DefaultPage";
 import { Link as InertiaLink } from "@inertiajs/react";
 import { Grid, Link } from "@mui/material";
 import React, { useState } from "react";
+import { formatDateTime } from "@/Utils";
 
 const columns = [
   {
@@ -36,7 +37,9 @@ const columns = [
     flex: 1,
     renderCell: ({ row }) => (
       <Can permission='update'>
-        <Link component={InertiaLink} href={route('panel.main.groups.edit', [row.id])}>{row.updated_at}</Link>
+        <Link component={InertiaLink} href={route('panel.main.groups.edit', [row.id])}>
+          {formatDateTime(row.updated_at)}
+        </Link>
       </Can>
     ),
   },

@@ -237,6 +237,20 @@ export default function DataTable({ url, columns, data, pageSize, rowsPerPageOpt
                   ? 'rgba(139, 92, 246, 0.08)'
                   : 'rgba(124, 58, 237, 0.04)',
             },
+            '& .MuiDataGrid-cell': {
+              color: '#3600b5',
+              fontWeight: 500,
+              '& a, & .MuiLink-root': {
+                color: '#3600b5 !important',
+                textDecoration: 'none !important',
+                fontWeight: 500,
+                transition: 'color 0.2s ease',
+                '&:hover': {
+                  color: '#2a0089 !important',
+                  textDecoration: 'none !important',
+                },
+              },
+            },
           }}
         />
       </Card>
