@@ -97,8 +97,7 @@ const Authenticated = ({ title, children }) => {
                 sx={{
                   flexGrow: 1,
                   p: 3,
-                  mt: isMobile ? '64px' : '70px', // Margin top for fixed header
-                  backgroundColor: 'background.default',
+                  mt: isMobile ? '64px' : '14px',
                 }}
               >
                 {React.Children.map(children, (child) => React.cloneElement(child))}
