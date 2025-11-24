@@ -21,16 +21,24 @@ class MeController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'password' => 'nullable|string|max:255|confirmed',
+            'current_password' => 'nullable|string|required_with:password',
+            'password' => 'nullable|string|min:8|max:255|confirmed',
         ]);
 
         $user = Auth::user();
 
-        if (isset($data['password'])) {
+        if (isset($data['password']) && !empty($data['password'])) {
+            if (!isset($data['current_password']) || !Hash::check($data['current_password'], $user->password)) {
+                throw ValidationException::withMessages([
+                    'current_password' => ['A senha atual está incorreta.'],
+                ]);
+            }
             $data['password'] = Hash::make($data['password']);
         } else {
             unset($data['password']);
         }
+
+        unset($data['current_password']);
 
         $user->update($data);
 
