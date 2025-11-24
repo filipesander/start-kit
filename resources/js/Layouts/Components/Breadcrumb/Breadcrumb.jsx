@@ -17,7 +17,7 @@ export default function Breadcrumb() {
   const { props: { auth: { user } } } = usePage();
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
       <Home sx={{ fontSize: 18, color: 'text.secondary' }} />
       <Breadcrumbs
         separator={<NavigateNext sx={{ fontSize: 18, color: 'text.disabled' }} />}
@@ -29,6 +29,7 @@ export default function Breadcrumb() {
             fontSize: '0.875rem',
             fontWeight: 500,
             cursor: 'pointer',
+            transition: 'color 0.2s ease',
             '&:hover': { color: 'primary.main' }
           }}
         >
@@ -43,6 +44,7 @@ export default function Breadcrumb() {
               fontSize: '0.875rem',
               fontWeight: 500,
               cursor: 'pointer',
+              transition: 'color 0.2s ease',
               '&:hover': { color: 'primary.main' }
             }}
           >
@@ -59,7 +61,8 @@ export default function Breadcrumb() {
             fontWeight: 600,
             background: (theme) => theme.palette.gradients.primary,
             color: '#fff',
-            '& .MuiChip-label': { px: 1.5 }
+            '& .MuiChip-label': { px: 1.5 },
+            boxShadow: (theme) => `0 2px 8px ${theme.palette.mode === 'dark' ? 'rgba(139, 92, 246, 0.3)' : 'rgba(124, 58, 237, 0.2)'}`,
           }}
         />
       </Breadcrumbs>
