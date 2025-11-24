@@ -160,23 +160,23 @@ const MobileDataTable = ({ columns, rows, loading, onSearch, actions }) => {
                   sx={{
                     wordBreak: 'break-word',
                     '& *': {
-                      color: '#3600b5 !important',
+                      color: (theme) => theme.palette.mode === 'dark' ? '#ffffff !important' : '#3600b5 !important',
                       fontWeight: 500,
                     },
                     '& a': {
                       textDecoration: 'none !important',
-                      color: '#3600b5 !important',
+                      color: (theme) => theme.palette.mode === 'dark' ? '#ffffff !important' : '#3600b5 !important',
                       '&:hover': {
                         textDecoration: 'none !important',
-                        color: '#2a0089 !important',
+                        color: (theme) => theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.8) !important' : '#2a0089 !important',
                       }
                     },
                     '& .MuiLink-root': {
                       textDecoration: 'none !important',
-                      color: '#3600b5 !important',
+                      color: (theme) => theme.palette.mode === 'dark' ? '#ffffff !important' : '#3600b5 !important',
                       '&:hover': {
                         textDecoration: 'none !important',
-                        color: '#2a0089 !important',
+                        color: (theme) => theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.8) !important' : '#2a0089 !important',
                       }
                     }
                   }}
@@ -210,7 +210,7 @@ const MobileDataTable = ({ columns, rows, loading, onSearch, actions }) => {
                   fontSize: '0.875rem',
                   wordBreak: 'break-word',
                   lineHeight: 1.3,
-                  color: '#3600b5 !important'
+                  color: (theme) => theme.palette.mode === 'dark' ? '#ffffff !important' : '#3600b5 !important'
                 }}
               >
                 {value || '-'}
@@ -259,23 +259,23 @@ const MobileDataTable = ({ columns, rows, loading, onSearch, actions }) => {
                   sx={{
                     wordBreak: 'break-word',
                     '& *': {
-                      color: '#3600b5 !important',
+                      color: (theme) => theme.palette.mode === 'dark' ? '#ffffff !important' : '#3600b5 !important',
                       fontWeight: 500,
                     },
                     '& a': {
                       textDecoration: 'none !important',
-                      color: '#3600b5 !important',
+                      color: (theme) => theme.palette.mode === 'dark' ? '#ffffff !important' : '#3600b5 !important',
                       '&:hover': {
                         textDecoration: 'none !important',
-                        color: '#2a0089 !important',
+                        color: (theme) => theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.8) !important' : '#2a0089 !important',
                       }
                     },
                     '& .MuiLink-root': {
                       textDecoration: 'none !important',
-                      color: '#3600b5 !important',
+                      color: (theme) => theme.palette.mode === 'dark' ? '#ffffff !important' : '#3600b5 !important',
                       '&:hover': {
                         textDecoration: 'none !important',
-                        color: '#2a0089 !important',
+                        color: (theme) => theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.8) !important' : '#2a0089 !important',
                       }
                     }
                   }}
@@ -308,7 +308,7 @@ const MobileDataTable = ({ columns, rows, loading, onSearch, actions }) => {
                   fontSize: '0.8125rem',
                   wordBreak: 'break-word',
                   lineHeight: 1.3,
-                  color: '#3600b5 !important'
+                  color: (theme) => theme.palette.mode === 'dark' ? '#ffffff !important' : '#3600b5 !important'
                 }}
               >
                 {value || '-'}

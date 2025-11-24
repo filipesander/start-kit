@@ -238,15 +238,15 @@ export default function DataTable({ url, columns, data, pageSize, rowsPerPageOpt
                   : 'rgba(124, 58, 237, 0.04)',
             },
             '& .MuiDataGrid-cell': {
-              color: '#3600b5',
+              color: (theme) => theme.palette.mode === 'dark' ? '#ffffff' : '#3600b5',
               fontWeight: 500,
               '& a, & .MuiLink-root': {
-                color: '#3600b5 !important',
+                color: (theme) => theme.palette.mode === 'dark' ? '#ffffff !important' : '#3600b5 !important',
                 textDecoration: 'none !important',
                 fontWeight: 500,
                 transition: 'color 0.2s ease',
                 '&:hover': {
-                  color: '#2a0089 !important',
+                  color: (theme) => theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.8) !important' : '#2a0089 !important',
                   textDecoration: 'none !important',
                 },
               },

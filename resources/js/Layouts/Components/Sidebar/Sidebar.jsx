@@ -281,11 +281,6 @@ function NavItem({item, isActive, isCollapsed}) {
       sx={{
         justifyContent: isCollapsed ? 'center' : 'flex-start',
         px: isCollapsed ? 1 : 2,
-        '&.active': {
-          color: 'text.primary',
-          bgcolor: 'action.selected',
-          fontWeight: 'fontWeightBold',
-        },
       }}
     >
       {icon && (

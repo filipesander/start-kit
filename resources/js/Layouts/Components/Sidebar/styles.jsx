@@ -6,7 +6,7 @@ export const StyledNavItem = styled((props) => <ListItemButton disableGutters {.
   height: 52,
   position: 'relative',
   textTransform: 'capitalize',
-  color: theme.palette.text.secondary,
+  color: theme.palette.mode === 'dark' ? '#ffffff' : '#3600b5',
   borderRadius: 14,
   padding: '0 16px',
   margin: '3px 0',
@@ -17,6 +17,7 @@ export const StyledNavItem = styled((props) => <ListItemButton disableGutters {.
       ? 'rgba(139, 92, 246, 0.12)'
       : 'rgba(124, 58, 237, 0.08)',
     transform: 'translateX(6px)',
+    color: theme.palette.mode === 'dark' ? '#ffffff' : '#3600b5',
     boxShadow: theme.palette.mode === 'dark'
       ? '0 8px 16px rgba(139, 92, 246, 0.25)'
       : '0 6px 16px rgba(124, 58, 237, 0.15)',
@@ -41,7 +42,7 @@ export const StyledNavItem = styled((props) => <ListItemButton disableGutters {.
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   },
   '&.active': {
-    color: theme.palette.mode === 'dark' ? '#fff' : theme.palette.primary.main,
+    color: theme.palette.mode === 'dark' ? '#ffffff' : '#3600b5',
     fontWeight: 700,
     background: theme.palette.mode === 'dark'
       ? 'linear-gradient(90deg, rgba(139, 92, 246, 0.2) 0%, rgba(6, 182, 212, 0.15) 100%)'
@@ -70,6 +71,7 @@ export const StyledNavItem = styled((props) => <ListItemButton disableGutters {.
     },
     '&:hover': {
       transform: 'translateX(6px) scale(1.02)',
+      color: theme.palette.mode === 'dark' ? '#ffffff' : '#3600b5',
       boxShadow: theme.palette.mode === 'dark'
         ? '0 12px 24px rgba(139, 92, 246, 0.35)'
         : '0 8px 20px rgba(124, 58, 237, 0.25)',
@@ -81,16 +83,17 @@ export const StyledNavItemIcon = styled(Box)(({ theme }) => ({
   width: 28,
   height: 28,
   marginRight: 12,
-  color: 'inherit',
+  color: theme.palette.mode === 'dark' ? '#ffffff' : '#3600b5',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   '.active &': {
+    color: theme.palette.mode === 'dark' ? '#ffffff' : '#3600b5',
     transform: 'scale(1.1)',
     filter: theme.palette.mode === 'dark'
-      ? 'drop-shadow(0 0 8px rgba(139, 92, 246, 0.6))'
-      : 'drop-shadow(0 2px 4px rgba(124, 58, 237, 0.3))',
+      ? 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))'
+      : 'drop-shadow(0 2px 4px rgba(54, 0, 181, 0.3))',
   },
 }));
 

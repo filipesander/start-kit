@@ -238,8 +238,40 @@ img {
 // Scrollbar customizada para desktop
 @media (min-width: 677px) {
     ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
+        width: 10px;
+        height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: rgba(124, 58, 237, 0.05);
+        border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, rgba(124, 58, 237, 0.6) 0%, rgba(139, 92, 246, 0.8) 100%);
+        border-radius: 5px;
+        border: 2px solid transparent;
+        background-clip: padding-box;
+        transition: all 0.3s ease;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, rgba(124, 58, 237, 0.8) 0%, rgba(139, 92, 246, 1) 100%);
+        border-radius: 5px;
+        border: 2px solid transparent;
+        background-clip: padding-box;
+    }
+
+    ::-webkit-scrollbar-thumb:active {
+        background: linear-gradient(180deg, #7c3aed 0%, #8b5cf6 100%);
+    }
+}
+
+// Scrollbar para mobile (quando aplicável)
+@media (max-width: 676px) {
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
     }
 
     ::-webkit-scrollbar-track {
@@ -247,12 +279,12 @@ img {
     }
 
     ::-webkit-scrollbar-thumb {
-        background: rgba(124, 58, 237, 0.3);
-        border-radius: 4px;
+        background: linear-gradient(180deg, rgba(124, 58, 237, 0.7) 0%, rgba(139, 92, 246, 0.9) 100%);
+        border-radius: 3px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-        background: rgba(124, 58, 237, 0.5);
+        background: linear-gradient(180deg, #7c3aed 0%, #8b5cf6 100%);
     }
 }
 
