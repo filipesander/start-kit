@@ -3,10 +3,12 @@ import { DataGrid } from "@mui/x-data-grid";
 import qs from 'qs';
 import http from "@/Libs/Http";
 import DefaultErrorAlert from "@/Layouts/Components/DefaultErrorAlert";
-import {Card} from "@mui/material";
+import {Card, useMediaQuery} from "@mui/material";
+import MobileDataTable from "@/Components/MobileDataTable";
 
 export default function DataTable({ url, columns, data, pageSize, rowsPerPageOptions, ...dataGridProps }) {
   const serverSide = !!url;
+  const isMobile = useMediaQuery('(max-width: 676px)');
 
   const initialSortModel = dataGridProps.sortModel || columns.filter(col => {
     return typeof col.sortable === 'undefined' || col.sortable;
@@ -171,13 +173,46 @@ export default function DataTable({ url, columns, data, pageSize, rowsPerPageOpt
     ]);
   }
 
+  // Se for mobile, renderiza versão mobile
+  if (isMobile) {
+    return (
+      <>
+        {error && (
+          <DefaultErrorAlert error={error} onClose={() => setError(null)} />
+        )}
+
+        <MobileDataTable
+          columns={config.columns}
+          rows={currentRows}
+          loading={loading}
+          onSearch={(term) => {
+            // Implementa busca se necessário
+            const searchFilter = {
+              ...currentFilterModel,
+              quickFilterValues: [term],
+            };
+            setCurrentFilterModel(searchFilter);
+          }}
+        />
+      </>
+    );
+  }
+
+  // Versão desktop normal
   return (
     <>
       {error && (
         <DefaultErrorAlert error={error} onClose={() => setError(null)} />
       )}
 
-      <Card>
+      <Card sx={{
+        borderRadius: 3,
+        overflow: 'hidden',
+        boxShadow: (theme) =>
+          theme.palette.mode === 'dark'
+            ? '0 4px 20px rgba(0, 0, 0, 0.3)'
+            : '0 4px 20px rgba(0, 0, 0, 0.08)',
+      }}>
         <DataGrid
           {...config}
           loading={loading}
@@ -191,6 +226,18 @@ export default function DataTable({ url, columns, data, pageSize, rowsPerPageOpt
           onSortModelChange={updateCurrentSortModel}
           filterModel={currentFilterModel}
           onFilterModelChange={setCurrentFilterModel}
+          sx={{
+            border: 'none',
+            '& .MuiDataGrid-cell:focus': {
+              outline: 'none',
+            },
+            '& .MuiDataGrid-row:hover': {
+              backgroundColor: (theme) =>
+                theme.palette.mode === 'dark'
+                  ? 'rgba(139, 92, 246, 0.08)'
+                  : 'rgba(124, 58, 237, 0.04)',
+            },
+          }}
         />
       </Card>
     </>

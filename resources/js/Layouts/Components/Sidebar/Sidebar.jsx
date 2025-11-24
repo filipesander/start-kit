@@ -1,11 +1,12 @@
-import React, {useContext} from 'react';
-import {Box, List, ListItemText, styled, useMediaQuery, Typography, alpha, IconButton, Tooltip} from '@mui/material';
+import React, {useContext, useEffect, useRef, useState} from 'react';
+import {Box, List, ListItemText, styled, useMediaQuery, Typography, alpha, IconButton, Tooltip, Backdrop} from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
 import {router, usePage} from '@inertiajs/react';
 import {SidebarContext} from '../../Authenticated';
-import {CustomEnvironmentLabel, StyledNavItem, StyledNavItemIcon} from "@/Layouts/Components/Sidebar/styles";
+import {StyledNavItem, StyledNavItemIcon} from "@/Layouts/Components/Sidebar/styles";
 import * as Unicons from '@iconscout/react-unicons';
 import classNames from "classnames";
+
 const openedMixin = (theme, width) => ({
   width: width,
   height: '100vh',
@@ -56,115 +57,195 @@ const Drawer = styled(MuiDrawer)(({theme, width, collapsed, collapsedwidth}) => 
   ...(collapsed ? closedMixin(theme, collapsedwidth) : openedMixin(theme, width)),
   '& .MuiDrawer-paper': collapsed ? closedMixin(theme, collapsedwidth) : openedMixin(theme, width),
 }));
+
 export default function Sidebar({}) {
   const sidebar = useContext(SidebarContext);
   const {auth: {user}} = usePage().props;
   const isMobile = useMediaQuery('(max-width: 676px)');
 
+  // Touch gesture states
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+  const drawerRef = useRef(null);
+
   // Get only current environment modules
   const currentEnvironment = user.current_environment;
   const currentModules = user.menu.find(env => env.slug === currentEnvironment?.slug)?.modules || [];
 
+  // Swipe gesture detection - mínimo 50px para considerar um swipe
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe && sidebar.isOpen) {
+      sidebar.toggleIsOpen();
+    }
+
+    if (isRightSwipe && !sidebar.isOpen && touchStart < 50) {
+      sidebar.toggleIsOpen();
+    }
+  };
+
+  // Edge swipe to open (detecta swipe da borda esquerda)
+  useEffect(() => {
+    if (!isMobile) return;
+
+    const handleEdgeSwipe = (e) => {
+      const touch = e.touches[0];
+      // Se o toque começar nos primeiros 30px da tela e a sidebar estiver fechada
+      if (touch.clientX < 30 && !sidebar.isOpen) {
+        setTouchStart(touch.clientX);
+      }
+    };
+
+    document.addEventListener('touchstart', handleEdgeSwipe, { passive: true });
+    return () => document.removeEventListener('touchstart', handleEdgeSwipe);
+  }, [isMobile, sidebar.isOpen]);
+
   return (
-    <Drawer
-      variant={isMobile ? 'temporary' : 'persistent'}
-      open={isMobile ? sidebar.isOpen : true}
-      width={sidebar.width}
-      collapsed={sidebar.isCollapsed}
-      collapsedwidth={sidebar.collapsedWidth}
-    >
-      {/* Logo Section */}
-      <Box
-        sx={{
-          height: '70px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: sidebar.isCollapsed ? 'center' : 'space-between',
-          px: sidebar.isCollapsed ? 1 : 2,
-          borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
-          background: (theme) => theme.palette.mode === 'dark'
-            ? alpha(theme.palette.background.paper, 0.6)
-            : alpha(theme.palette.background.paper, 0.8),
-          backdropFilter: 'blur(10px)',
-          transition: 'all 0.3s ease',
+    <>
+      {/* Backdrop moderno para mobile */}
+      {isMobile && (
+        <Backdrop
+          open={sidebar.isOpen}
+          onClick={sidebar.toggleIsOpen}
+          sx={{
+            zIndex: (theme) => theme.zIndex.drawer,
+            backgroundColor: 'rgba(0, 0, 0, 0.6)',
+            backdropFilter: 'blur(4px)',
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          }}
+        />
+      )}
+
+      <Drawer
+        variant={isMobile ? 'temporary' : 'persistent'}
+        open={isMobile ? sidebar.isOpen : true}
+        width={sidebar.width}
+        collapsed={sidebar.isCollapsed}
+        collapsedwidth={sidebar.collapsedWidth}
+        onTouchStart={isMobile ? onTouchStart : undefined}
+        onTouchMove={isMobile ? onTouchMove : undefined}
+        onTouchEnd={isMobile ? onTouchEnd : undefined}
+        ref={drawerRef}
+        ModalProps={{
+          keepMounted: true, // Melhor performance no mobile
+          disableScrollLock: true,
+        }}
+        PaperProps={{
+          sx: {
+            touchAction: 'pan-y',
+            overscrollBehavior: 'contain',
+          }
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', minWidth: 0, flex: sidebar.isCollapsed ? 0 : 1 }}>
-          <Tooltip title={sidebar.isCollapsed ? "Sistema" : ""} placement="right" arrow>
-            <Box
-              sx={{
-                width: 44,
-                height: 44,
-                borderRadius: 2.5,
-                background: (theme) => theme.palette.gradients?.primary || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                mr: sidebar.isCollapsed ? 0 : 1.5,
-                boxShadow: (theme) => `0 8px 16px ${alpha(theme.palette.primary.main, 0.4)}`,
-                transition: 'all 0.3s ease',
-                flexShrink: 0,
-                '&:hover': {
-                  transform: 'scale(1.05) rotate(-5deg)',
-                  boxShadow: (theme) => `0 12px 24px ${alpha(theme.palette.primary.main, 0.5)}`,
-                },
-              }}
-            >
-              <Unicons.UilRocket size={26} color="#fff" />
-            </Box>
-          </Tooltip>
-          {!sidebar.isCollapsed && (
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: 700,
-                background: (theme) => theme.palette.gradients?.primary || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                backgroundClip: 'text',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                fontSize: '1.25rem',
-                letterSpacing: '-0.5px',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-              }}
-            >
-              Sistema
-            </Typography>
+        {/* Logo Section */}
+        <Box
+          sx={{
+            height: '70px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: sidebar.isCollapsed ? 'center' : 'space-between',
+            px: sidebar.isCollapsed ? 1 : 2,
+            borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
+            background: (theme) => theme.palette.mode === 'dark'
+              ? alpha(theme.palette.background.paper, 0.6)
+              : alpha(theme.palette.background.paper, 0.8),
+            backdropFilter: 'blur(10px)',
+            transition: 'all 0.3s ease',
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', minWidth: 0, flex: sidebar.isCollapsed ? 0 : 1 }}>
+            <Tooltip title={sidebar.isCollapsed ? "Sistema" : ""} placement="right" arrow>
+              <Box
+                sx={{
+                  width: 44,
+                  height: 44,
+                  borderRadius: 2.5,
+                  background: (theme) => theme.palette.gradients?.primary || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  mr: sidebar.isCollapsed ? 0 : 1.5,
+                  boxShadow: (theme) => `0 8px 16px ${alpha(theme.palette.primary.main, 0.4)}`,
+                  transition: 'all 0.3s ease',
+                  flexShrink: 0,
+                  '&:hover': {
+                    transform: 'scale(1.05) rotate(-5deg)',
+                    boxShadow: (theme) => `0 12px 24px ${alpha(theme.palette.primary.main, 0.5)}`,
+                  },
+                }}
+              >
+                <Unicons.UilRocket size={26} color="#fff" />
+              </Box>
+            </Tooltip>
+            {!sidebar.isCollapsed && (
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: 700,
+                  background: (theme) => theme.palette.gradients?.primary || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  fontSize: '1.25rem',
+                  letterSpacing: '-0.5px',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                Sistema
+              </Typography>
+            )}
+          </Box>
+
+          {/* Toggle Button - apenas no desktop */}
+          {!isMobile && (
+            <Tooltip title={sidebar.isCollapsed ? "Expandir menu" : "Recolher menu"} placement="right" arrow>
+              <IconButton
+                onClick={sidebar.toggleCollapsed}
+                sx={{
+                  width: 36,
+                  height: 36,
+                  background: (theme) => alpha(theme.palette.primary.main, 0.1),
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    background: (theme) => alpha(theme.palette.primary.main, 0.2),
+                    transform: 'scale(1.1)',
+                  },
+                }}
+              >
+                {sidebar.isCollapsed ? (
+                  <Unicons.UilAngleDoubleRight size={20} color="currentColor" />
+                ) : (
+                  <Unicons.UilAngleDoubleLeft size={20} color="currentColor" />
+                )}
+              </IconButton>
+            </Tooltip>
           )}
         </Box>
 
-        {/* Toggle Button - apenas no desktop */}
-        {!isMobile && (
-          <Tooltip title={sidebar.isCollapsed ? "Expandir menu" : "Recolher menu"} placement="right" arrow>
-            <IconButton
-              onClick={sidebar.toggleCollapsed}
-              sx={{
-                width: 36,
-                height: 36,
-                background: (theme) => alpha(theme.palette.primary.main, 0.1),
-                transition: 'all 0.3s ease',
-                '&:hover': {
-                  background: (theme) => alpha(theme.palette.primary.main, 0.2),
-                  transform: 'scale(1.1)',
-                },
-              }}
-            >
-              {sidebar.isCollapsed ? (
-                <Unicons.UilAngleDoubleRight size={20} color="currentColor" />
-              ) : (
-                <Unicons.UilAngleDoubleLeft size={20} color="currentColor" />
-              )}
-            </IconButton>
-          </Tooltip>
-        )}
-      </Box>
-
-      <Box sx={{ pt: 2 }}>
-        <NavSection data={currentModules} isCollapsed={sidebar.isCollapsed} />
-      </Box>
-      <LogOut />
-    </Drawer>
+        <Box sx={{ pt: 2 }}>
+          <NavSection data={currentModules} isCollapsed={sidebar.isCollapsed} />
+        </Box>
+        <LogOut />
+      </Drawer>
+    </>
   );
 }
 

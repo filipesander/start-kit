@@ -96,8 +96,12 @@ const Authenticated = ({ title, children }) => {
                 component='main'
                 sx={{
                   flexGrow: 1,
-                  p: 3,
+                  p: isMobile ? 2 : 3,
                   mt: isMobile ? '64px' : '14px',
+                  minHeight: isMobile ? 'calc(100vh - 64px)' : 'auto',
+                  overflowX: 'hidden',
+                  WebkitOverflowScrolling: 'touch',
+                  position: 'relative',
                 }}
               >
                 {React.Children.map(children, (child) => React.cloneElement(child))}
