@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Topbar from '@/Layouts/Components/Topbar';
 import Header from '@/Layouts/Components/Header';
+import BottomNavigation from '@/Layouts/Components/BottomNavigation';
 import { Head, usePage } from '@inertiajs/react';
 import { SnackbarProvider } from 'notistack';
 import {Box, Button, useMediaQuery} from '@mui/material';
@@ -98,7 +99,8 @@ const Authenticated = ({ title, children }) => {
                   flexGrow: 1,
                   p: isMobile ? 2 : 3,
                   mt: isMobile ? '64px' : '14px',
-                  minHeight: isMobile ? 'calc(100vh - 64px)' : 'auto',
+                  mb: isMobile ? '68px' : 0, // Espaço para bottom nav (reduzido)
+                  minHeight: isMobile ? 'calc(100vh - 64px - 68px)' : 'auto',
                   overflowX: 'hidden',
                   WebkitOverflowScrolling: 'touch',
                   position: 'relative',
@@ -106,6 +108,9 @@ const Authenticated = ({ title, children }) => {
               >
                 {React.Children.map(children, (child) => React.cloneElement(child))}
               </Box>
+
+              {/* Bottom Navigation - Mobile Only */}
+              {isMobile && <BottomNavigation />}
             </Box>
           </Box>
         </SidebarContext.Provider>

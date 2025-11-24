@@ -203,7 +203,7 @@ const MobileDataTable = ({ columns, rows, loading, onSearch, actions }) => {
   }
 
   // Separa colunas principais (primeiras 2-3) e de detalhe
-  const mainColumns = columns.filter((col) => !col.filterable && col.field !== 'actions').slice(0, 2);
+  const mainColumns = columns.filter((col) => col.field !== 'actions').slice(0, 2);
   const detailColumns = columns.filter((col) => !mainColumns.includes(col) && col.field !== 'actions');
   const actionsColumn = columns.find((col) => col.field === 'actions');
 

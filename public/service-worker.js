@@ -60,18 +60,31 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          // Clona a resposta antes de armazenar no cache
-          const responseClone = response.clone();
+          // Apenas cacheia respostas bem-sucedidas
+          if (response.ok) {
+            const responseClone = response.clone();
 
-          caches.open(DYNAMIC_CACHE).then((cache) => {
-            cache.put(request, responseClone);
-          });
+            caches.open(DYNAMIC_CACHE).then((cache) => {
+              cache.put(request, responseClone);
+            });
+          }
 
           return response;
         })
-        .catch(() => {
+        .catch((error) => {
+          console.log('[Service Worker] Fetch failed, trying cache:', error);
           return caches.match(request).then((cached) => {
-            return cached || caches.match('/offline.html');
+            if (cached) {
+              return cached;
+            }
+            // Não retorna offline.html para requisições de API/dados
+            if (request.url.includes('/api/')) {
+              return new Response(JSON.stringify({ error: 'Offline' }), {
+                headers: { 'Content-Type': 'application/json' },
+                status: 503
+              });
+            }
+            return caches.match('/offline.html');
           });
         })
     );

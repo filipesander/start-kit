@@ -97,6 +97,7 @@ button {
     // Melhora espaçamento para mobile
     .MuiCard-root {
         margin-bottom: 12px;
+        border-radius: 16px;
     }
 
     // Otimiza padding de containers
@@ -117,6 +118,59 @@ button {
     h4 { font-size: 1.1rem; }
     h5 { font-size: 1rem; }
     h6 { font-size: 0.9rem; }
+
+    // Otimizações adicionais para mobile
+    .MuiPaper-root {
+        border-radius: 12px;
+    }
+
+    .MuiButton-root {
+        border-radius: 12px;
+        padding: 10px 20px;
+        font-weight: 600;
+        text-transform: none;
+    }
+
+    // Espaçamento entre elementos
+    main > * + * {
+        margin-top: 16px;
+    }
+
+    // Feedback visual em touch
+    button:active,
+    a:active,
+    .MuiIconButton-root:active {
+        transform: scale(0.95);
+        transition: transform 0.1s ease;
+    }
+
+    // Inputs maiores para mobile
+    .MuiTextField-root,
+    .MuiOutlinedInput-root {
+        font-size: 16px;
+    }
+
+    // Tabs mais espaçadas
+    .MuiTab-root {
+        min-height: 56px;
+        padding: 12px 20px;
+    }
+
+    // Melhor visualização de modais
+    .MuiDialog-paper {
+        margin: 16px;
+        max-height: calc(100% - 32px);
+    }
+
+    // Bottom Navigation safe area
+    .MuiBottomNavigation-root {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    // Floating buttons safe area
+    .MuiFab-root {
+        bottom: calc(72px + env(safe-area-inset-bottom)) !important;
+    }
 }
 
 // Animações suaves para gestos

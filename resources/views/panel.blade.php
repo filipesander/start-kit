@@ -69,30 +69,16 @@
     <body class="font-sans antialiased">
         @inertia
 
-        <!-- PWA Service Worker Registration -->
+        <!-- PWA Service Worker Registration - TEMPORARIAMENTE DESABILITADO -->
         <script>
+            // Service Worker desabilitado temporariamente - problemas com cache
+            // Desregistra qualquer service worker existente
             if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('/service-worker.js')
-                        .then((registration) => {
-                            console.log('Service Worker registrado com sucesso:', registration.scope);
-
-                            // Verifica atualizações periodicamente
-                            setInterval(() => {
-                                registration.update();
-                            }, 60000); // A cada 1 minuto
-                        })
-                        .catch((error) => {
-                            console.log('Falha ao registrar Service Worker:', error);
-                        });
-                });
-
-                // Detecta quando há uma atualização disponível
-                let refreshing;
-                navigator.serviceWorker.addEventListener('controllerchange', () => {
-                    if (refreshing) return;
-                    refreshing = true;
-                    window.location.reload();
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for(let registration of registrations) {
+                        registration.unregister();
+                        console.log('Service Worker desregistrado:', registration.scope);
+                    }
                 });
             }
 
