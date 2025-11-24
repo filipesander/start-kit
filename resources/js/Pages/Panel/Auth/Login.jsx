@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link as InertiaLink, useForm } from '@inertiajs/react';
 import Guest from '@/Layouts/Guest';
-import { Box, Button, Checkbox, CircularProgress, FormControlLabel, Link, TextField, InputAdornment, IconButton, Alert, alpha } from '@mui/material';
+import { Box, Button, Switch, CircularProgress, FormControlLabel, Link, TextField, InputAdornment, IconButton, Alert, alpha, Typography, Paper } from '@mui/material';
 import { Visibility, VisibilityOff, Email, Lock } from '@mui/icons-material';
 
 export default function Login({ status, denied, canResetPassword }) {
@@ -82,16 +82,26 @@ export default function Login({ status, denied, canResetPassword }) {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Email sx={{ color: 'text.secondary' }} />
+                  <Email sx={{ color: 'text.secondary', transition: 'all 0.2s ease-in-out' }} />
                 </InputAdornment>
               ),
             }}
             sx={{
               mb: 2,
               '& .MuiOutlinedInput-root': {
+                borderRadius: 2,
+                transition: 'all 0.3s ease-in-out',
+                '&:hover': {
+                  backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.02),
+                },
                 '&.Mui-focused': {
+                  backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.03),
                   '& .MuiInputAdornment-root svg': {
                     color: 'primary.main',
+                    transform: 'scale(1.1)',
+                  },
+                  '& fieldset': {
+                    borderWidth: 2,
                   },
                 },
               },
@@ -117,7 +127,7 @@ export default function Login({ status, denied, canResetPassword }) {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Lock sx={{ color: 'text.secondary' }} />
+                  <Lock sx={{ color: 'text.secondary', transition: 'all 0.2s ease-in-out' }} />
                 </InputAdornment>
               ),
               endAdornment: (
@@ -127,6 +137,13 @@ export default function Login({ status, denied, canResetPassword }) {
                     onClick={handleClickShowPassword}
                     edge="end"
                     size="small"
+                    sx={{
+                      transition: 'all 0.2s ease-in-out',
+                      '&:hover': {
+                        backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.08),
+                        transform: 'scale(1.1)',
+                      },
+                    }}
                   >
                     {showPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
@@ -136,28 +153,75 @@ export default function Login({ status, denied, canResetPassword }) {
             sx={{
               mb: 1,
               '& .MuiOutlinedInput-root': {
+                borderRadius: 2,
+                transition: 'all 0.3s ease-in-out',
+                '&:hover': {
+                  backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.02),
+                },
                 '&.Mui-focused': {
+                  backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.03),
                   '& .MuiInputAdornment-root svg': {
                     color: 'primary.main',
+                    transform: 'scale(1.1)',
+                  },
+                  '& fieldset': {
+                    borderWidth: 2,
                   },
                 },
               },
             }}
           />
 
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              mb: 3,
+              mt: 2,
+            }}
+          >
             <FormControlLabel
               control={
-                <Checkbox
-                  value='remember'
-                  color='primary'
+                <Switch
                   checked={data.remember}
                   onChange={onHandleChange}
                   disabled={processing}
                   name='remember'
+                  color='primary'
+                  sx={{
+                    '& .MuiSwitch-switchBase': {
+                      '&.Mui-checked': {
+                        color: 'primary.main',
+                        '& + .MuiSwitch-track': {
+                          backgroundColor: 'primary.main',
+                          opacity: 0.7,
+                        },
+                      },
+                    },
+                    '& .MuiSwitch-track': {
+                      borderRadius: 26 / 2,
+                      backgroundColor: (theme) => alpha(theme.palette.text.secondary, 0.2),
+                    },
+                  }}
                 />
               }
-              label='Manter logado'
+              label={
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontWeight: 500,
+                    color: 'text.primary',
+                    userSelect: 'none',
+                  }}
+                >
+                  Manter logado
+                </Typography>
+              }
+              sx={{
+                m: 0,
+                gap: 1,
+              }}
             />
 
             {canResetPassword && (
@@ -168,8 +232,10 @@ export default function Login({ status, denied, canResetPassword }) {
                   textDecoration: 'none',
                   fontWeight: 600,
                   fontSize: '0.875rem',
+                  transition: 'all 0.2s ease-in-out',
                   '&:hover': {
                     textDecoration: 'underline',
+                    transform: 'translateX(2px)',
                   },
                 }}
               >
