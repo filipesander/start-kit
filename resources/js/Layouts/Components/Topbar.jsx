@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Box, IconButton, Toolbar, styled, alpha } from "@mui/material";
+import { Box, IconButton, Toolbar, styled } from "@mui/material";
 import MuiAppBar from '@mui/material/AppBar';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
@@ -40,12 +40,13 @@ export default function Topbar({ }) {
       enableColorOnDark
       sx={{
         background: (theme) => theme.palette.mode === 'dark'
-          ? alpha(theme.palette.background.paper, 0.95)
-          : alpha(theme.palette.primary.main, 0.98),
+          ? 'linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 50%, rgba(6, 182, 212, 0.95) 100%)'
+          : 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #06b6d4 100%)',
         backdropFilter: 'blur(20px)',
         boxShadow: (theme) => theme.palette.mode === 'dark'
-          ? '0 4px 24px rgba(0, 0, 0, 0.3)'
-          : '0 4px 24px rgba(102, 126, 234, 0.15)',
+          ? '0 4px 24px rgba(0, 0, 0, 0.4)'
+          : '0 4px 24px rgba(102, 126, 234, 0.25)',
+        borderRadius: 0,
       }}
     >
       <Toolbar sx={{ minHeight: '64px !important', gap: 1 }}>
