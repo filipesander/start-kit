@@ -1,7 +1,7 @@
 {
-  "name": "Sistema Painel",
-  "short_name": "Sistema",
-  "description": "Sistema de Gerenciamento - PWA",
+  "name": "Start Kit - Sistema de Gerenciamento",
+  "short_name": "Start Kit",
+  "description": "Start Kit - Sistema de Gerenciamento Moderno PWA",
   "start_url": "/panel",
   "display": "standalone",
   "background_color": "#ffffff",

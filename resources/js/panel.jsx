@@ -6,7 +6,7 @@ import { router } from '@inertiajs/react';
 import PageLoader from '@/Components/PageLoader';
 import { useState, useEffect } from 'react';
 
-const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
+const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Start Kit';
 
 // Componente wrapper para gerenciar o loader
 const AppWithLoader = ({ App, props }) => {
