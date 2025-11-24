@@ -45,10 +45,10 @@ export default function UserMenu() {
         }}
       >
         <Box sx={{ textAlign: 'right', display: { xs: 'none', sm: 'block' } }}>
-          <Typography variant="body2" sx={{ fontWeight: 600, lineHeight: 1.2 }}>
+          <Typography variant="body2" sx={{ fontWeight: 600, lineHeight: 1.2, color: 'white' }}>
             {user.name}
           </Typography>
-          <Typography variant="caption" color="text.secondary">
+          <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
             {user.email}
           </Typography>
         </Box>

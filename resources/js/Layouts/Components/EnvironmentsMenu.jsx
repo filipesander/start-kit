@@ -60,23 +60,23 @@ export default function EnvironmentsMenu() {
       onClick={handleMenuOpen}
       endIcon={environments.length > 1 ? <KeyboardArrowDownIcon /> : null}
       sx={{
-        color: 'text.primary',
+        color: 'white',
         textTransform: 'none',
         borderRadius: 3,
         px: 2.5,
         py: 1.2,
         minWidth: 220,
         justifyContent: 'space-between',
-        background: (theme) => `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.08)} 0%, ${alpha(theme.palette.secondary.main, 0.05)} 100%)`,
+        background: (theme) => alpha(theme.palette.common.white, 0.15),
         backdropFilter: 'blur(10px)',
-        border: (theme) => `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+        border: (theme) => `1px solid ${alpha(theme.palette.common.white, 0.25)}`,
         fontWeight: 600,
         fontSize: '0.875rem',
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-        boxShadow: (theme) => `0 2px 8px ${alpha(theme.palette.primary.main, 0.1)}`,
+        boxShadow: (theme) => `0 4px 12px ${alpha(theme.palette.common.black, 0.15)}`,
         cursor: hasMultipleEnvironments ? 'pointer' : 'default',
         '&:hover': hasMultipleEnvironments ? {
-          background: (theme) => `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.12)} 0%, ${alpha(theme.palette.secondary.main, 0.08)} 100%)`,
+          background: (theme) => alpha(theme.palette.common.white, 0.25),
           transform: 'translateY(-2px)',
           boxShadow: (theme) => `0 4px 16px ${alpha(theme.palette.primary.main, 0.2)}`,
           borderColor: (theme) => alpha(theme.palette.primary.main, 0.3),
@@ -99,10 +99,10 @@ export default function EnvironmentsMenu() {
           <CurrentIcon size={18} color="#fff" />
         </Box>
         <Box>
-          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.65rem', lineHeight: 1 }}>
+          <Typography variant="caption" sx={{ display: 'block', fontSize: '0.65rem', lineHeight: 1, color: 'rgba(255, 255, 255, 0.7)' }}>
             Ambiente
           </Typography>
-          <Typography variant="body2" sx={{ fontWeight: 700, lineHeight: 1.3 }}>
+          <Typography variant="body2" sx={{ fontWeight: 700, lineHeight: 1.3, color: 'white' }}>
             {currentEnvironment.label}
           </Typography>
         </Box>

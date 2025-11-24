@@ -113,15 +113,16 @@ export default function NotificationsMenu() {
         onClick={handleOpen}
         sx={{
           position: 'relative',
+          color: 'white',
           transition: 'all 0.3s ease',
           '&:hover': {
-            backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.08),
+            backgroundColor: (theme) => alpha(theme.palette.common.white, 0.15),
             transform: 'scale(1.1)',
           },
         }}
       >
         <Badge badgeContent={unreadCount} color="error">
-          <Notifications />
+          <Notifications sx={{ color: 'white' }} />
         </Badge>
       </IconButton>
 

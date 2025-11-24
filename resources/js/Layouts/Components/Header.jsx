@@ -9,15 +9,30 @@ import { SidebarContext } from '../Authenticated';
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   background: theme.palette.mode === 'dark'
-    ? alpha(theme.palette.background.paper, 0.8)
-    : alpha(theme.palette.background.paper, 0.9),
+    ? 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #06b6d4 100%)'
+    : 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #06b6d4 100%)',
   backdropFilter: 'blur(20px)',
   WebkitBackdropFilter: 'blur(20px)',
   boxShadow: theme.palette.mode === 'dark'
-    ? `0 4px 20px ${alpha(theme.palette.common.black, 0.5)}`
-    : `0 2px 12px ${alpha(theme.palette.common.black, 0.08)}`,
-  borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-  zIndex: theme.zIndex.drawer - 1,
+    ? `0 8px 32px ${alpha('#667eea', 0.4)}, 0 4px 16px ${alpha(theme.palette.common.black, 0.5)}`
+    : `0 8px 32px ${alpha('#667eea', 0.3)}, 0 4px 16px ${alpha('#764ba2', 0.2)}`,
+  borderBottom: `1px solid ${alpha(theme.palette.common.white, 0.1)}`,
+  zIndex: theme.zIndex.drawer,
+  position: 'relative',
+  overflow: 'hidden',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: theme.palette.mode === 'dark'
+      ? 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 50%, rgba(6, 182, 212, 0.1) 100%)'
+      : 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
+    backdropFilter: 'blur(10px)',
+    zIndex: -1,
+  },
 }));
 
 export default function Header() {
@@ -30,16 +45,17 @@ export default function Header() {
       color="inherit"
       elevation={0}
       sx={{
-        left: { xs: 0, sm: `${sidebarWidth}px` },
-        width: { xs: '100%', sm: `calc(100% - ${sidebarWidth}px)` },
+        left: 0,
+        width: '100%',
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       }}
     >
       <Toolbar
         sx={{
           minHeight: '70px !important',
-          px: { xs: 2, sm: 3 },
+          px: 0,
           gap: 2,
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         }}
       >
         {/* Environment Selector */}
@@ -48,6 +64,7 @@ export default function Header() {
             display: 'flex',
             alignItems: 'center',
             gap: 2,
+            ml: { xs: 2, sm: `calc(${sidebarWidth}px - 230px)` },
           }}
         >
           <EnvironmentsMenu />
@@ -65,14 +82,10 @@ export default function Header() {
             px: 1.5,
             py: 0.5,
             borderRadius: 3,
-            background: (theme) => theme.palette.mode === 'dark'
-              ? alpha(theme.palette.background.default, 0.4)
-              : alpha(theme.palette.grey[100], 0.6),
+            background: (theme) => alpha(theme.palette.common.white, 0.15),
             backdropFilter: 'blur(10px)',
-            border: (theme) => `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-            boxShadow: (theme) => theme.palette.mode === 'dark'
-              ? `0 4px 12px ${alpha(theme.palette.common.black, 0.3)}`
-              : `0 2px 8px ${alpha(theme.palette.common.black, 0.05)}`,
+            border: (theme) => `1px solid ${alpha(theme.palette.common.white, 0.2)}`,
+            boxShadow: (theme) => `0 4px 16px ${alpha(theme.palette.common.black, 0.1)}`,
           }}
         >
           {/* Theme Toggle */}
@@ -86,7 +99,7 @@ export default function Header() {
               mx: 0.5,
               height: 32,
               alignSelf: 'center',
-              borderColor: (theme) => alpha(theme.palette.divider, 0.2),
+              borderColor: (theme) => alpha(theme.palette.common.white, 0.3),
             }}
           />
 
@@ -101,7 +114,8 @@ export default function Header() {
           sx={{
             ml: 1,
             pl: 2,
-            borderLeft: (theme) => `1px solid ${alpha(theme.palette.divider, 0.2)}`,
+            pr: { xs: 2, sm: 3 },
+            borderLeft: (theme) => `1px solid ${alpha(theme.palette.common.white, 0.2)}`,
           }}
         >
           <UserMenu />
