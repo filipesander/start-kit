@@ -329,7 +329,12 @@ const Me = () => {
                 </Box>
 
                 {/* Botões de Ação */}
-                <Box mt={4} display="flex" justifyContent="flex-end" gap={2}>
+                <Box
+                  mt={4}
+                  display="flex"
+                  justifyContent={{ xs: 'stretch', md: 'flex-end' }}
+                  gap={2}
+                >
                   <Can permission='update'>
                     <Button
                       variant="contained"
@@ -338,6 +343,7 @@ const Me = () => {
                       size="large"
                       disabled={processing}
                       startIcon={processing ? <CircularProgress size={20} color="inherit" /> : <SaveIcon />}
+                      fullWidth={{ xs: true, md: false }}
                       sx={{
                         px: 4,
                         py: 1.5,

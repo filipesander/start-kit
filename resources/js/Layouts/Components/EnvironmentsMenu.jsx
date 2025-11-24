@@ -17,15 +17,6 @@ export default function EnvironmentsMenu() {
 
   const currentEnvironment = user.current_environment;
 
-  // Se for profile, não mostra o seletor
-  if (currentEnvironment.slug === 'profile') {
-    return (<></>);
-  }
-
-  // Debug: mostrar quantos ambientes existem
-  console.log('Ambientes disponíveis:', environments.length, environments);
-  console.log('Ambiente atual:', currentEnvironment);
-
   const [anchorEl, setAnchorEl] = useState();
 
   const isMenuOpen = Boolean(anchorEl);

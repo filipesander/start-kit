@@ -47,15 +47,14 @@ const Otp = ({ name, secret, qrCode, signature }) => {
           Se não for possível escanear o QR Code, configure com este código: <strong>{data.secret}</strong>
         </Typography>
 
-        <img key={data.signature} src={data.qrCode} width='250' />
+        <img key={data.signature} src={data.qrCode} width='250' style={{ marginBottom: '16px' }} />
 
         <form onSubmit={handleSubmit} style={{ width: '100%' }}>
-          <Grid container>
+          <Grid container spacing={{ xs: 2, md: 2.5 }}>
             <Grid item xs={12} md={6}>
               <TextField
                 variant='outlined'
                 size='small'
-                margin='normal'
                 id='code'
                 name='code'
                 type='text'
@@ -75,9 +74,25 @@ const Otp = ({ name, secret, qrCode, signature }) => {
                 autoFocus
               />
             </Grid>
-            <Grid item md={12}>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              sx={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                pt: { xs: 0, md: 0.5 }
+              }}
+            >
               {!processing && (
-                <Button variant="contained" color="primary" type='submit'>Verificar</Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  type='submit'
+                  fullWidth={{ xs: true, md: false }}
+                >
+                  Verificar
+                </Button>
               )}
 
               {processing && (

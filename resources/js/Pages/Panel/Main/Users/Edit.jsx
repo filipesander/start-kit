@@ -62,7 +62,7 @@ const Edit = ({ user, roles, groups, isReadOnly }) => {
     <DefaultPage title={getTitle()}>
       <DefaultCard>
         <form onSubmit={handleSubmit}>
-          <Grid container spacing={2}>
+          <Grid container spacing={{ xs: 2, md: 2.5 }}>
             <Grid item md={6} xs={12}>
               <TextField
                 variant='outlined'
@@ -105,7 +105,7 @@ const Edit = ({ user, roles, groups, isReadOnly }) => {
             </Grid>
           </Grid>
 
-          <Grid container spacing={2}>
+          <Grid container spacing={{ xs: 2, md: 2.5 }}>
             <Grid item md={4} xs={12}>
               <TextField
                 variant='outlined'
@@ -165,7 +165,7 @@ const Edit = ({ user, roles, groups, isReadOnly }) => {
             </Grid>
           </Grid>
 
-          <Grid container spacing={2}>
+          <Grid container spacing={{ xs: 2, md: 2.5 }}>
             <Grid item md={3} xs={12}>
               <FormControl
                 variant='outlined'
@@ -218,33 +218,50 @@ const Edit = ({ user, roles, groups, isReadOnly }) => {
             </Grid>
           </Grid>
 
-          <br />
-
-          <Grid container justifyContent='space-between' alignItems='center' spacing={2}>
-            <Grid item md={9} xs={12}>
-              <Button color='inherit' variant='contained' component={InertiaLink} href={route('panel.main.users.index')}>
+          <Grid
+            container
+            spacing={2}
+            sx={{
+              mt: { xs: 2, md: 3 },
+              pt: { xs: 2, md: 3 },
+              borderTop: (theme) => `1px solid ${theme.palette.divider}`
+            }}
+          >
+            <Grid item xs={12} md={6}>
+              <Button
+                color='inherit'
+                variant='contained'
+                component={InertiaLink}
+                href={route('panel.main.users.index')}
+                fullWidth={{ xs: true, md: false }}
+              >
                 Voltar
               </Button>
             </Grid>
             <Grid
-              container
               item
-              md={3}
               xs={12}
-              spacing={1}
-              justifyContent={{ xs: 'flex-start', md: 'flex-end' }}
-              sx={{ mt: { xs: 1, md: 0 } }}
+              md={6}
+              sx={{
+                display: 'flex',
+                gap: 1.5,
+                justifyContent: { xs: 'flex-start', md: 'flex-end' },
+                flexWrap: 'wrap'
+              }}
             >
               {data.id && (
-                <Grid item>
-                  <Reset2FA user={user} />
-                </Grid>
+                <Reset2FA user={user} />
               )}
               <Can permission={`${data.id ? 'update' : 'create'}`}>
                 {!isReadOnly && (
-                  <Grid item>
+                  <>
                     {!processing && (
-                      <Button variant="contained" color="primary" type='submit'>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        type='submit'
+                        sx={{ minWidth: { xs: '100%', md: 'auto' } }}
+                      >
                         {data.id ? 'Atualizar' : 'Registrar'}
                       </Button>
                     )}
@@ -252,7 +269,7 @@ const Edit = ({ user, roles, groups, isReadOnly }) => {
                     {processing && (
                       <CircularProgress />
                     )}
-                  </Grid>
+                  </>
                 )}
               </Can>
             </Grid>

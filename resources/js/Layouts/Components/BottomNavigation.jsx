@@ -1,5 +1,5 @@
 import React from 'react';
-import { BottomNavigation as MuiBottomNavigation, BottomNavigationAction, Paper, Badge, useTheme, alpha } from '@mui/material';
+import { BottomNavigation as MuiBottomNavigation, BottomNavigationAction, Paper, Badge, useTheme } from '@mui/material';
 import { router, usePage } from '@inertiajs/react';
 import * as Unicons from '@iconscout/react-unicons';
 
@@ -90,7 +90,7 @@ export default function BottomNavigation() {
           },
         }}
       >
-        {modules.map((module, index) => {
+        {modules.map((module) => {
           const IconComponent = Unicons[module.icon] || Unicons.UilApps;
           const hasNotification = module.badge > 0;
 
