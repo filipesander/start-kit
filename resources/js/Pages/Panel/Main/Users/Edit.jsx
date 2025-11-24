@@ -220,19 +220,29 @@ const Edit = ({ user, roles, groups, isReadOnly }) => {
 
           <br />
 
-          <Grid container justifyContent='space-between'>
+          <Grid container justifyContent='space-between' alignItems='center' spacing={2}>
             <Grid item md={9} xs={12}>
               <Button color='inherit' variant='contained' component={InertiaLink} href={route('panel.main.users.index')}>
                 Voltar
               </Button>
             </Grid>
-            <Grid container item md={3} xs={12} justifyContent='space-around'>
+            <Grid
+              container
+              item
+              md={3}
+              xs={12}
+              spacing={1}
+              justifyContent={{ xs: 'flex-start', md: 'flex-end' }}
+              sx={{ mt: { xs: 1, md: 0 } }}
+            >
               {data.id && (
-                <Reset2FA user={user} />
+                <Grid item>
+                  <Reset2FA user={user} />
+                </Grid>
               )}
               <Can permission={`${data.id ? 'update' : 'create'}`}>
                 {!isReadOnly && (
-                  <>
+                  <Grid item>
                     {!processing && (
                       <Button variant="contained" color="primary" type='submit'>
                         {data.id ? 'Atualizar' : 'Registrar'}
@@ -242,7 +252,7 @@ const Edit = ({ user, roles, groups, isReadOnly }) => {
                     {processing && (
                       <CircularProgress />
                     )}
-                  </>
+                  </Grid>
                 )}
               </Can>
             </Grid>

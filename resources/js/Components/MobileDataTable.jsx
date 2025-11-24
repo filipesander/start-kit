@@ -25,20 +25,20 @@ import {
 import { styled } from '@mui/material/styles';
 
 const MobileCard = styled(Card)(({ theme, expanded }) => ({
-  marginBottom: theme.spacing(2),
-  borderRadius: 16,
+  marginBottom: theme.spacing(1.5),
+  borderRadius: 12,
   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   border: `1px solid ${theme.palette.divider}`,
   background: theme.palette.background.paper,
   boxShadow: expanded
     ? theme.palette.mode === 'dark'
-      ? '0 8px 24px rgba(0, 0, 0, 0.4)'
-      : '0 8px 24px rgba(124, 58, 237, 0.12)'
+      ? '0 4px 16px rgba(0, 0, 0, 0.3)'
+      : '0 4px 16px rgba(124, 58, 237, 0.1)'
     : theme.palette.mode === 'dark'
-    ? '0 2px 8px rgba(0, 0, 0, 0.2)'
-    : '0 2px 8px rgba(0, 0, 0, 0.08)',
+    ? '0 1px 4px rgba(0, 0, 0, 0.2)'
+    : '0 1px 4px rgba(0, 0, 0, 0.06)',
   '&:active': {
-    transform: 'scale(0.98)',
+    transform: 'scale(0.99)',
   },
 }));
 
@@ -87,6 +87,7 @@ const MobileDataTable = ({ columns, rows, loading, onSearch, actions }) => {
     <Box sx={{ mb: 2 }}>
       <TextField
         fullWidth
+        size="small"
         variant="outlined"
         placeholder="Buscar..."
         value={searchTerm}
@@ -94,15 +95,16 @@ const MobileDataTable = ({ columns, rows, loading, onSearch, actions }) => {
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              <SearchIcon />
+              <SearchIcon fontSize="small" />
             </InputAdornment>
           ),
           sx: {
-            borderRadius: 3,
+            borderRadius: 2.5,
             backgroundColor: (theme) =>
               theme.palette.mode === 'dark'
                 ? alpha(theme.palette.background.paper, 0.6)
                 : alpha(theme.palette.background.paper, 1),
+            fontSize: '0.875rem',
           },
         }}
       />
@@ -126,67 +128,196 @@ const MobileDataTable = ({ columns, rows, loading, onSearch, actions }) => {
 
   // Renderiza informações principais do card (colunas principais)
   const renderMainInfo = (row, mainColumns) => {
-    return mainColumns.map((column) => {
-      const value = row[column.field];
+    return (
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: `repeat(${mainColumns.length}, 1fr)`,
+          gap: 1.5,
+        }}
+      >
+        {mainColumns.map((column) => {
+          const value = row[column.field];
 
-      if (column.renderCell) {
-        return (
-          <Box key={column.field} sx={{ mb: 1 }}>
-            {column.renderCell({ row, value })}
-          </Box>
-        );
-      }
+          if (column.renderCell) {
+            return (
+              <Box key={column.field} sx={{ minWidth: 0 }}>
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{
+                    display: 'block',
+                    fontWeight: 600,
+                    fontSize: '0.7rem',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px',
+                    mb: 0.5
+                  }}
+                >
+                  {column.headerName}
+                </Typography>
+                <Box
+                  sx={{
+                    wordBreak: 'break-word',
+                    '& *': {
+                      color: '#3600b5 !important',
+                      fontWeight: 500,
+                    },
+                    '& a': {
+                      textDecoration: 'none !important',
+                      color: '#3600b5 !important',
+                      '&:hover': {
+                        textDecoration: 'none !important',
+                        color: '#2a0089 !important',
+                      }
+                    },
+                    '& .MuiLink-root': {
+                      textDecoration: 'none !important',
+                      color: '#3600b5 !important',
+                      '&:hover': {
+                        textDecoration: 'none !important',
+                        color: '#2a0089 !important',
+                      }
+                    }
+                  }}
+                >
+                  {column.renderCell({ row, value })}
+                </Box>
+              </Box>
+            );
+          }
 
-      return (
-        <Box key={column.field} sx={{ mb: 1 }}>
-          <Typography
-            variant="caption"
-            color="text.secondary"
-            sx={{ display: 'block', mb: 0.5 }}
-          >
-            {column.headerName}
-          </Typography>
-          <Typography variant="body1" fontWeight={500}>
-            {value || '-'}
-          </Typography>
-        </Box>
-      );
-    });
+          return (
+            <Box key={column.field} sx={{ minWidth: 0 }}>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{
+                  display: 'block',
+                  fontWeight: 600,
+                  fontSize: '0.7rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px',
+                  mb: 0.5
+                }}
+              >
+                {column.headerName}
+              </Typography>
+              <Typography
+                variant="body2"
+                fontWeight={500}
+                sx={{
+                  fontSize: '0.875rem',
+                  wordBreak: 'break-word',
+                  lineHeight: 1.3,
+                  color: '#3600b5 !important'
+                }}
+              >
+                {value || '-'}
+              </Typography>
+            </Box>
+          );
+        })}
+      </Box>
+    );
   };
 
   // Renderiza informações detalhadas (restante das colunas)
   const renderDetailInfo = (row, detailColumns) => {
-    return detailColumns.map((column) => {
-      const value = row[column.field];
+    // Calcula quantas colunas por linha (máximo 2 para detalhes)
+    const columnsPerRow = Math.min(detailColumns.length, 2);
 
-      if (column.renderCell) {
-        return (
-          <Box key={column.field} sx={{ mb: 2 }}>
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{ display: 'block', mb: 0.5 }}
-            >
-              {column.headerName}
-            </Typography>
-            {column.renderCell({ row, value })}
-          </Box>
-        );
-      }
+    return (
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: `repeat(${columnsPerRow}, 1fr)`,
+          gap: 1.5,
+        }}
+      >
+        {detailColumns.map((column) => {
+          const value = row[column.field];
 
-      return (
-        <Box key={column.field} sx={{ mb: 2 }}>
-          <Typography
-            variant="caption"
-            color="text.secondary"
-            sx={{ display: 'block', mb: 0.5 }}
-          >
-            {column.headerName}
-          </Typography>
-          <Typography variant="body2">{value || '-'}</Typography>
-        </Box>
-      );
-    });
+          if (column.renderCell) {
+            return (
+              <Box key={column.field} sx={{ minWidth: 0 }}>
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{
+                    display: 'block',
+                    fontWeight: 600,
+                    fontSize: '0.7rem',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px',
+                    mb: 0.5
+                  }}
+                >
+                  {column.headerName}
+                </Typography>
+                <Box
+                  sx={{
+                    wordBreak: 'break-word',
+                    '& *': {
+                      color: '#3600b5 !important',
+                      fontWeight: 500,
+                    },
+                    '& a': {
+                      textDecoration: 'none !important',
+                      color: '#3600b5 !important',
+                      '&:hover': {
+                        textDecoration: 'none !important',
+                        color: '#2a0089 !important',
+                      }
+                    },
+                    '& .MuiLink-root': {
+                      textDecoration: 'none !important',
+                      color: '#3600b5 !important',
+                      '&:hover': {
+                        textDecoration: 'none !important',
+                        color: '#2a0089 !important',
+                      }
+                    }
+                  }}
+                >
+                  {column.renderCell({ row, value })}
+                </Box>
+              </Box>
+            );
+          }
+
+          return (
+            <Box key={column.field} sx={{ minWidth: 0 }}>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{
+                  display: 'block',
+                  fontWeight: 600,
+                  fontSize: '0.7rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px',
+                  mb: 0.5
+                }}
+              >
+                {column.headerName}
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  fontSize: '0.8125rem',
+                  wordBreak: 'break-word',
+                  lineHeight: 1.3,
+                  color: '#3600b5 !important'
+                }}
+              >
+                {value || '-'}
+              </Typography>
+            </Box>
+          );
+        })}
+      </Box>
+    );
   };
 
   if (!isMobile) {
@@ -238,44 +369,79 @@ const MobileDataTable = ({ columns, rows, loading, onSearch, actions }) => {
 
             return (
               <MobileCard key={rowId} expanded={isExpanded}>
-                <CardContent sx={{ pb: 1, '&:last-child': { pb: 2 } }}>
-                  {/* Informações principais */}
-                  <Box sx={{ mb: 1 }}>
-                    {renderMainInfo(row, mainColumns)}
-                  </Box>
-
-                  {/* Ações e botão de expandir */}
+                <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
+                  {/* Informações principais + Ações na mesma linha */}
                   <Box
                     sx={{
                       display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      mt: 2,
+                      alignItems: 'flex-start',
+                      gap: 1.5,
+                      mb: detailColumns.length > 0 ? 0 : 0
                     }}
                   >
-                    {actionsColumn && (
-                      <Box sx={{ display: 'flex', gap: 1 }}>
-                        {actionsColumn.renderCell({ row })}
-                      </Box>
-                    )}
+                    {/* Informações principais */}
+                    <Box sx={{ flex: 1, minWidth: 0 }}>
+                      {renderMainInfo(row, mainColumns)}
+                    </Box>
 
-                    {detailColumns.length > 0 && (
-                      <ExpandButton
-                        expanded={isExpanded}
-                        onClick={() => handleExpandClick(rowId)}
-                        aria-expanded={isExpanded}
-                        aria-label="mostrar mais"
-                      >
-                        <ExpandMoreIcon />
-                      </ExpandButton>
-                    )}
+                    {/* Ações e botão de expandir */}
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 0.5,
+                        flexShrink: 0,
+                      }}
+                    >
+                      {actionsColumn && (
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            gap: 0.25,
+                            alignItems: 'center',
+                            '& .MuiIconButton-root': {
+                              padding: '3px',
+                              width: '24px',
+                              height: '24px',
+                              '& .MuiSvgIcon-root': {
+                                fontSize: '0.875rem',
+                              }
+                            },
+                            '& .MuiButton-root': {
+                              minWidth: 'auto',
+                              padding: '3px 8px',
+                              fontSize: '0.65rem',
+                              height: '24px',
+                              lineHeight: 1,
+                            }
+                          }}
+                        >
+                          {actionsColumn.renderCell({ row })}
+                        </Box>
+                      )}
+
+                      {detailColumns.length > 0 && (
+                        <ExpandButton
+                          expanded={isExpanded}
+                          onClick={() => handleExpandClick(rowId)}
+                          aria-expanded={isExpanded}
+                          aria-label="mostrar mais"
+                          sx={{
+                            padding: '3px',
+                            width: '24px',
+                            height: '24px',
+                          }}
+                        >
+                          <ExpandMoreIcon sx={{ fontSize: '0.875rem' }} />
+                        </ExpandButton>
+                      )}
+                    </Box>
                   </Box>
 
                   {/* Informações detalhadas (colapsável) */}
                   {detailColumns.length > 0 && (
                     <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-                      <Divider sx={{ my: 2 }} />
-                      <Box sx={{ pt: 1 }}>
+                      <Box sx={{ pt: 2, mt: 1.5, borderTop: (theme) => `1px solid ${theme.palette.divider}` }}>
                         {renderDetailInfo(row, detailColumns)}
                       </Box>
                     </Collapse>
