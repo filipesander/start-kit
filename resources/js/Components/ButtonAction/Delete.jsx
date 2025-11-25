@@ -1,7 +1,7 @@
 import DefaultErrorAlert from "@/Layouts/Components/DefaultErrorAlert";
 import http from "@/Libs/Http";
 import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Icon } from "@mui/material";
-import { useSnackbar } from "notistack";
+import { toast } from "react-toastify";
 import { useState } from "react";
 import Can from "../Can";
 
@@ -14,24 +14,18 @@ export default function Delete({ environment, module, route, label, size, onDele
   const handleOpen = () => setDialogIsOpen(true);
   const handleClose = () => setDialogIsOpen(false);
 
-  const { enqueueSnackbar } = useSnackbar();
-
   const handleConfirm = async (event) => {
     try {
       setIsLoading(true);
       await http.delete(route);
 
       if (onDeletedMessage) {
-        enqueueSnackbar(onDeletedMessage, {
-          variant: 'success',
-        });
+        toast.success(`✅ ${onDeletedMessage}`);
       }
 
       onDeleted();
     } catch (error) {
-      enqueueSnackbar(error.response?.data?.message || error.message, {
-        variant: 'error',
-      });
+      toast.error(`❌ ${error.response?.data?.message || error.message}`);
     } finally {
       setIsLoading(false);
       handleClose();

@@ -3,9 +3,10 @@ import Topbar from '@/Layouts/Components/Topbar';
 import Header from '@/Layouts/Components/Header';
 import BottomNavigation from '@/Layouts/Components/BottomNavigation';
 import { Head, usePage } from '@inertiajs/react';
-import { SnackbarProvider } from 'notistack';
-import {Box, Button, useMediaQuery} from '@mui/material';
-import { Close } from '@mui/icons-material';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import '../../../css/toast-custom.css';
+import {Box, useMediaQuery} from '@mui/material';
 import FlashNotifications from './Components/FlashNotifications';
 import Sidebar from "@/Layouts/Components/Sidebar";
 
@@ -44,41 +45,33 @@ const Authenticated = ({ title, children }) => {
     localStorage.setItem('sidebarCollapsed', JSON.stringify(collapsed));
   };
 
-  const notistackRef = React.createRef();
-  const onClickDismiss = (key) => () => {
-    notistackRef.current.closeSnackbar(key);
-  };
-
-  const notistackDismissAction = (key) => (
-    <Button onClick={onClickDismiss(key)} variant='text' color='inherit' size='small'>
-      <Close />
-    </Button>
-  );
-
   return (
     <>
       <Head title={user.current_module.label || title} />
 
-      <SnackbarProvider
-        maxSnack={15}
-        ref={notistackRef}
-        action={notistackDismissAction}
-        autoHideDuration={10000}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
+      <SidebarContext.Provider
+        value={{
+          ...defaultSidebarConfig,
+          isOpen: sidebarIsOpen,
+          isCollapsed: sidebarIsCollapsed,
+          toggleIsOpen: toggleSidebarIsOpen,
+          toggleCollapsed: toggleSidebarCollapsed,
         }}
       >
-        <SidebarContext.Provider
-          value={{
-            ...defaultSidebarConfig,
-            isOpen: sidebarIsOpen,
-            isCollapsed: sidebarIsCollapsed,
-            toggleIsOpen: toggleSidebarIsOpen,
-            toggleCollapsed: toggleSidebarCollapsed,
-          }}
-        >
-          <FlashNotifications />
+        <FlashNotifications />
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={true}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+          limit={5}
+        />
 
           <Box sx={{ display: 'flex', minHeight: '100vh' }}>
             {/* Sidebar */}
@@ -114,7 +107,6 @@ const Authenticated = ({ title, children }) => {
             </Box>
           </Box>
         </SidebarContext.Provider>
-      </SnackbarProvider>
     </>
   );
 }
