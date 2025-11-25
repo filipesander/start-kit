@@ -3,6 +3,7 @@ import Delete from "@/Components/ButtonAction/Delete";
 import Edit from "@/Components/ButtonAction/Edit";
 import Can from "@/Components/Can";
 import DataTable from "@/Components/DataTable";
+import TableFilters from "@/Components/TableFilters";
 import withAuthenticated from "@/hoc/withAuthenticated";
 import DefaultPage from "@/Layouts/Components/DefaultPage";
 import { Link as InertiaLink } from "@inertiajs/react";
@@ -69,8 +70,23 @@ const columns = [
   },
 ];
 
+// Configuração dos filtros
+const filterConfig = [
+  {
+    field: 'name',
+    label: 'Nome do Grupo',
+    type: 'text',
+    operator: 'contains',
+  },
+];
+
 function List() {
   const [selectedRows, setSelectedRows] = useState([]);
+  const [filters, setFilters] = useState({});
+
+  const handleFilterChange = (newFilters) => {
+    setFilters(newFilters);
+  };
 
   return (
     <DefaultPage
@@ -78,9 +94,16 @@ function List() {
         <Create route={route('panel.main.groups.create')} label='Registrar' />,
       ]}
     >
+      <TableFilters
+        filters={filterConfig}
+        onFilterChange={handleFilterChange}
+        initialValues={filters}
+      />
+
       <DataTable
         url={route('panel.main.groups.index')}
         columns={columns}
+        externalFilters={filters}
         checkboxSelection
         onSelectionModelChange={setSelectedRows}
         disableSelectionOnClick

@@ -6,9 +6,10 @@ import DefaultErrorAlert from "@/Layouts/Components/DefaultErrorAlert";
 import {Card, useMediaQuery} from "@mui/material";
 import MobileDataTable from "@/Components/MobileDataTable";
 
-export default function DataTable({ url, columns, data, pageSize, rowsPerPageOptions, ...dataGridProps }) {
+export default function DataTable({ url, columns, data, pageSize, rowsPerPageOptions, externalFilters = {}, ...dataGridProps }) {
   const serverSide = !!url;
   const isMobile = useMediaQuery('(max-width: 676px)');
+  const [currentExternalFilters, setCurrentExternalFilters] = useState(externalFilters);
 
   const initialSortModel = dataGridProps.sortModel || columns.filter(col => {
     return typeof col.sortable === 'undefined' || col.sortable;
@@ -109,13 +110,22 @@ export default function DataTable({ url, columns, data, pageSize, rowsPerPageOpt
           ...col.search,
         };
       } else {
-        const filter = currentFilterModel.items.find(item => item.columnField === col.field);
-
-        if (filter) {
+        // Verifica se há filtro externo para esta coluna
+        if (currentExternalFilters[col.field]) {
           search = {
-            ...filter,
+            value: currentExternalFilters[col.field],
             regex: false,
+            operator: col.filterOperator || 'contains',
           };
+        } else {
+          const filter = currentFilterModel.items.find(item => item.columnField === col.field);
+
+          if (filter) {
+            search = {
+              ...filter,
+              regex: false,
+            };
+          }
         }
       }
 
@@ -161,6 +171,11 @@ export default function DataTable({ url, columns, data, pageSize, rowsPerPageOpt
       .finally(() => setLoading(false));
   };
 
+  // Atualiza filtros externos quando mudam
+  useEffect(() => {
+    setCurrentExternalFilters(externalFilters);
+  }, [externalFilters]);
+
   if (serverSide) {
     useEffect(() => {
       loadDataTable();
@@ -169,6 +184,7 @@ export default function DataTable({ url, columns, data, pageSize, rowsPerPageOpt
       currentPageSize,
       currentSortModel,
       currentFilterModel,
+      currentExternalFilters,
       columns,
     ]);
   }
