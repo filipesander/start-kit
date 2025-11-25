@@ -1,5 +1,65 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+// ============================================
+// TYPOGRAPHY - FONTE MODERNA
+// ============================================
+
+* {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 400;
+    letter-spacing: -0.011em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.022em;
+}
+
+// Melhora a legibilidade de textos pequenos
+small, .text-sm, .MuiTypography-caption {
+    letter-spacing: -0.006em;
+}
+
+// Melhora títulos e headings
+.MuiTypography-h1,
+.MuiTypography-h2,
+.MuiTypography-h3,
+.MuiTypography-h4,
+.MuiTypography-h5,
+.MuiTypography-h6 {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.022em;
+}
+
+// Botões com fonte mais robusta
+.MuiButton-root,
+button {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.011em;
+}
+
+// Inputs com melhor legibilidade
+input,
+textarea,
+select,
+.MuiInputBase-root,
+.MuiOutlinedInput-root {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 400;
+    letter-spacing: -0.011em;
+}
 
 // Legacy styles
 .nav-child-items {
@@ -285,6 +345,46 @@ img {
 
     ::-webkit-scrollbar-thumb:hover {
         background: linear-gradient(180deg, #7c3aed 0%, #8b5cf6 100%);
+    }
+}
+
+// ============================================
+// TABLE ACTION BUTTONS OPTIMIZATION
+// ============================================
+
+// Reduz o tamanho dos botões de ação nas tabelas
+.MuiDataGrid-root {
+    .MuiDataGrid-cell {
+        // Botões de ação menores e mais compactos
+        .MuiButton-root {
+            min-width: 36px;
+            padding: 6px 10px;
+            font-size: 0.875rem;
+
+            .MuiIcon-root {
+                font-size: 1.25rem;
+            }
+
+            // Se tiver label, ajusta padding
+            &:not(:empty) {
+                padding: 6px 12px;
+            }
+        }
+
+        // Ajusta Grid container de ações
+        .MuiGrid-container {
+            gap: 8px;
+            flex-wrap: nowrap;
+
+            .MuiGrid-item {
+                padding: 0;
+            }
+        }
+    }
+
+    // Reduz a largura da coluna de ações
+    .MuiDataGrid-cell[data-field="actions"] {
+        padding: 12px;
     }
 }
 

@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 import Can from "../Can";
 
-export default function Delete({ environment, module, route, label, size, onDeletedMessage = '', onDeleted = () => { } }) {
+export default function Delete({ environment, module, route, label, size = 'small', onDeletedMessage = '', onDeleted = () => { } }) {
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -39,7 +39,19 @@ export default function Delete({ environment, module, route, label, size, onDele
       )}
 
       {!isLoading && (
-        <Button variant='contained' size={size} color='error' onClick={handleOpen}>
+        <Button
+          variant='contained'
+          size={size}
+          color='error'
+          onClick={handleOpen}
+          sx={{
+            minWidth: label ? 'auto' : '36px',
+            padding: label ? '6px 12px' : '6px 10px',
+            '& .MuiIcon-root': {
+              fontSize: '1.25rem',
+            }
+          }}
+        >
           <Icon>delete</Icon> {label || ''}
         </Button>
       )}
@@ -50,8 +62,12 @@ export default function Delete({ environment, module, route, label, size, onDele
           size={size}
           color='error'
           disabled
+          sx={{
+            minWidth: '36px',
+            padding: '6px 10px',
+          }}
         >
-          <CircularProgress color='secondary' size='1.5rem' />
+          <CircularProgress color='secondary' size='1.25rem' />
         </Button>
       )}
 
