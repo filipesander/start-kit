@@ -4,11 +4,12 @@ import DefaultErrorAlert from "@/Layouts/Components/DefaultErrorAlert";
 import DefaultPage from "@/Layouts/Components/DefaultPage";
 import http from "@/Libs/Http";
 import { Link as InertiaLink, useForm } from "@inertiajs/react";
-import { Button, Checkbox, CircularProgress, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Button, Checkbox, CircularProgress, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography, Box, Divider, alpha } from "@mui/material";
 import { CheckBox, CheckBoxOutlineBlank } from "@mui/icons-material";
 import { Autocomplete } from '@mui/material';
 import React, { useState } from "react";
 import DefaultCard from "@/Components/DefaultCard";
+import * as Unicons from '@iconscout/react-unicons';
 
 const Edit = ({ user, roles, groups, isReadOnly }) => {
   const { data, setData, post, put, processing, errors, reset } = useForm({
@@ -62,193 +63,255 @@ const Edit = ({ user, roles, groups, isReadOnly }) => {
     <DefaultPage title={getTitle()}>
       <DefaultCard>
         <form onSubmit={handleSubmit}>
-          <Grid container spacing={{ xs: 2, md: 2.5 }}>
-            <Grid item md={6} xs={12}>
-              <TextField
-                variant='outlined'
-                margin='dense'
-                size='small'
-                id='name'
-                name='name'
-                type='text'
-                label='Nome'
-                autoComplete='name'
-                value={data.name}
-                onChange={onHandleInputChange}
-                error={!!errors.name}
-                helperText={errors.name}
-                disabled={processing}
-                inputProps={{ readOnly: isReadOnly }}
-                fullWidth
-                required
-                autoFocus
-              />
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField
-                variant='outlined'
-                margin='dense'
-                size='small'
-                id='email'
-                name='email'
-                type='email'
-                label='Email'
-                autoComplete='email'
-                value={data.email}
-                onChange={onHandleInputChange}
-                error={!!errors.email}
-                helperText={errors.email}
-                disabled={processing}
-                fullWidth
-                required
-              />
-            </Grid>
-          </Grid>
-
-          <Grid container spacing={{ xs: 2, md: 2.5 }}>
-            <Grid item md={4} xs={12}>
-              <TextField
-                variant='outlined'
-                margin='dense'
-                size='small'
-                name='password'
-                label='Senha'
-                type='password'
-                id='password'
-                autoComplete='new-password'
-                value={data.password}
-                onChange={onHandleInputChange}
-                error={!!errors.password}
-                helperText={errors.password}
-                disabled={processing}
-                required={!data.id}
-                fullWidth
-              />
-            </Grid>
-            <Grid item md={4} xs={12}>
-              <TextField
-                variant='outlined'
-                margin='dense'
-                size='small'
-                name='password_confirmation'
-                label='Confirme a senha'
-                type='password'
-                id='password_confirmation'
-                autoComplete='new-password'
-                value={data.password_confirmation}
-                onChange={onHandleInputChange}
-                error={!!errors.password_confirmation}
-                helperText={errors.password_confirmation}
-                disabled={processing}
-                required={!data.id}
-                fullWidth
-              />
-            </Grid>
-            <Grid item md={4} xs={12}>
-              <TextField
-                variant='outlined'
-                margin='dense'
-                size='small'
-                name='auth_password'
-                label='Sua Senha'
-                type='password'
-                id='auth_password'
-                autoComplete='current-password'
-                value={data.auth_password}
-                onChange={onHandleInputChange}
-                error={!!errors.auth_password}
-                helperText={errors.auth_password}
-                disabled={processing}
-                required={!data.id || !!data.password}
-                fullWidth
-              />
-            </Grid>
-          </Grid>
-
-          <Grid container spacing={{ xs: 2, md: 2.5 }}>
-            <Grid item md={3} xs={12}>
-              <FormControl
-                variant='outlined'
-                error={!!errors.role}
-                fullWidth
-                margin='dense'
-                size='small'
+          {/* Seção: Informações Pessoais */}
+          <Box sx={{ mb: 3 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
+              <Box
+                sx={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 2,
+                  background: (theme) => alpha(theme.palette.primary.main, 0.1),
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'primary.main'
+                }}
               >
-                <InputLabel id='form-user-role-label'>Cargo</InputLabel>
-                <Select
-                  labelId='form-user-role-label'
-                  id='form-user-role'
-                  value={data.role}
-                  onChange={onHandleInputChange}
-                  label='Cargo'
-                  name='role'
-                >
-                  {Object.entries(roles).map(([value, label]) => (
-                    <MenuItem key={value} value={value}>{label}</MenuItem>
-                  ))}
-                </Select>
-                {!!errors.role && (
-                  <FormHelperText>{errors.role}</FormHelperText>
-                )}
-              </FormControl>
-            </Grid>
-            <Grid item md={5} xs={12}>
-              <Autocomplete
-                multiple
-                disableCloseOnSelect
-                fullWidth
-                filterSelectedOptions
-                id='form-user-groups'
-                options={groups}
-                defaultValue={groups.filter(group => data.groups.includes(group.id))}
-                onChange={handleGroupsChange}
-                getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option) => data.groups.includes(option.id)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    variant='outlined'
-                    label='Grupos'
-                    placeholder='Grupos'
-                    margin='dense'
-                  />
-                )}
-                size='small'
-              />
-            </Grid>
-          </Grid>
+                <Unicons.UilUser size={18} />
+              </Box>
+              <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                Informações Pessoais
+              </Typography>
+            </Box>
 
-          <Grid
-            container
-            spacing={2}
+            <Grid container spacing={2}>
+              <Grid item md={6} xs={12}>
+                <TextField
+                  variant='outlined'
+                  size='small'
+                  id='name'
+                  name='name'
+                  type='text'
+                  label='Nome Completo'
+                  autoComplete='name'
+                  value={data.name}
+                  onChange={onHandleInputChange}
+                  error={!!errors.name}
+                  helperText={errors.name}
+                  disabled={processing}
+                  inputProps={{ readOnly: isReadOnly }}
+                  fullWidth
+                  required
+                  autoFocus
+                />
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <TextField
+                  variant='outlined'
+                  size='small'
+                  id='email'
+                  name='email'
+                  type='email'
+                  label='Endereço de Email'
+                  autoComplete='email'
+                  value={data.email}
+                  onChange={onHandleInputChange}
+                  error={!!errors.email}
+                  helperText={errors.email}
+                  disabled={processing}
+                  fullWidth
+                  required
+                />
+              </Grid>
+            </Grid>
+          </Box>
+
+          <Divider sx={{ my: 3 }} />
+
+          {/* Seção: Segurança */}
+          <Box sx={{ mb: 3 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
+              <Box
+                sx={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 2,
+                  background: (theme) => alpha(theme.palette.warning.main, 0.1),
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'warning.main'
+                }}
+              >
+                <Unicons.UilLock size={18} />
+              </Box>
+              <Box>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                  Segurança
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {data.id ? 'Deixe em branco para manter a senha atual' : 'Crie uma senha segura'}
+                </Typography>
+              </Box>
+            </Box>
+
+            <Grid container spacing={2}>
+              <Grid item md={4} xs={12}>
+                <TextField
+                  variant='outlined'
+                  size='small'
+                  name='password'
+                  label='Nova Senha'
+                  type='password'
+                  id='password'
+                  autoComplete='new-password'
+                  value={data.password}
+                  onChange={onHandleInputChange}
+                  error={!!errors.password}
+                  helperText={errors.password}
+                  disabled={processing}
+                  required={!data.id}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item md={4} xs={12}>
+                <TextField
+                  variant='outlined'
+                  size='small'
+                  name='password_confirmation'
+                  label='Confirmar Nova Senha'
+                  type='password'
+                  id='password_confirmation'
+                  autoComplete='new-password'
+                  value={data.password_confirmation}
+                  onChange={onHandleInputChange}
+                  error={!!errors.password_confirmation}
+                  helperText={errors.password_confirmation}
+                  disabled={processing}
+                  required={!data.id}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item md={4} xs={12}>
+                <TextField
+                  variant='outlined'
+                  size='small'
+                  name='auth_password'
+                  label='Sua Senha Atual'
+                  type='password'
+                  id='auth_password'
+                  autoComplete='current-password'
+                  value={data.auth_password}
+                  onChange={onHandleInputChange}
+                  error={!!errors.auth_password}
+                  helperText={errors.auth_password || 'Para confirmar as alterações'}
+                  disabled={processing}
+                  required={!data.id || !!data.password}
+                  fullWidth
+                />
+              </Grid>
+            </Grid>
+          </Box>
+
+          <Divider sx={{ my: 3 }} />
+
+          {/* Seção: Permissões */}
+          <Box sx={{ mb: 3 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
+              <Box
+                sx={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 2,
+                  background: (theme) => alpha(theme.palette.success.main, 0.1),
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'success.main'
+                }}
+              >
+                <Unicons.UilShieldCheck size={18} />
+              </Box>
+              <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                Permissões e Grupos
+              </Typography>
+            </Box>
+
+            <Grid container spacing={2}>
+              <Grid item md={4} xs={12}>
+                <FormControl
+                  variant='outlined'
+                  error={!!errors.role}
+                  fullWidth
+                  size='small'
+                >
+                  <InputLabel id='form-user-role-label'>Cargo</InputLabel>
+                  <Select
+                    labelId='form-user-role-label'
+                    id='form-user-role'
+                    value={data.role}
+                    onChange={onHandleInputChange}
+                    label='Cargo'
+                    name='role'
+                  >
+                    {Object.entries(roles).map(([value, label]) => (
+                      <MenuItem key={value} value={value}>{label}</MenuItem>
+                    ))}
+                  </Select>
+                  {!!errors.role && (
+                    <FormHelperText>{errors.role}</FormHelperText>
+                  )}
+                </FormControl>
+              </Grid>
+              <Grid item md={8} xs={12}>
+                <Autocomplete
+                  multiple
+                  disableCloseOnSelect
+                  fullWidth
+                  filterSelectedOptions
+                  id='form-user-groups'
+                  options={groups}
+                  defaultValue={groups.filter(group => data.groups.includes(group.id))}
+                  onChange={handleGroupsChange}
+                  getOptionLabel={(option) => option.name}
+                  isOptionEqualToValue={(option) => data.groups.includes(option.id)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant='outlined'
+                      label='Grupos de Acesso'
+                      placeholder='Selecione os grupos'
+                      size='small'
+                    />
+                  )}
+                />
+              </Grid>
+            </Grid>
+          </Box>
+
+          {/* Seção: Ações */}
+          <Box
             sx={{
-              mt: { xs: 2, md: 3 },
-              pt: { xs: 2, md: 3 },
-              borderTop: (theme) => `1px solid ${theme.palette.divider}`
+              display: 'flex',
+              gap: 2,
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              pt: 1
             }}
           >
-            <Grid item xs={12} md={6}>
-              <Button
-                color='inherit'
-                variant='contained'
-                component={InertiaLink}
-                href={route('panel.main.users.index')}
-                fullWidth={{ xs: true, md: false }}
-              >
-                Voltar
-              </Button>
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              md={6}
-              sx={{
-                display: 'flex',
-                gap: 1.5,
-                justifyContent: { xs: 'flex-start', md: 'flex-end' },
-                flexWrap: 'wrap'
-              }}
+            <Button
+              color='inherit'
+              variant='outlined'
+              component={InertiaLink}
+              href={route('panel.main.users.index')}
+              startIcon={<Unicons.UilArrowLeft size={18} />}
             >
+              Voltar
+            </Button>
+
+            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
               {data.id && (
                 <Reset2FA user={user} />
               )}
@@ -260,20 +323,26 @@ const Edit = ({ user, roles, groups, isReadOnly }) => {
                         variant="contained"
                         color="primary"
                         type='submit'
-                        sx={{ minWidth: { xs: '100%', md: 'auto' } }}
+                        startIcon={data.id ? <Unicons.UilCheck size={18} /> : <Unicons.UilPlus size={18} />}
                       >
-                        {data.id ? 'Atualizar' : 'Registrar'}
+                        {data.id ? 'Salvar Alterações' : 'Criar Usuário'}
                       </Button>
                     )}
 
                     {processing && (
-                      <CircularProgress />
+                      <Button
+                        variant="contained"
+                        disabled
+                      >
+                        <CircularProgress size={20} sx={{ mr: 1 }} />
+                        Processando...
+                      </Button>
                     )}
                   </>
                 )}
               </Can>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         </form>
       </DefaultCard>
     </DefaultPage>
@@ -297,12 +366,6 @@ const Reset2FA = ({ user }) => {
     }
   };
 
-  if (reseting) {
-    return (
-      <CircularProgress color='secondary' />
-    );
-  }
-
   return (
     <>
       {error && (
@@ -313,8 +376,14 @@ const Reset2FA = ({ user }) => {
       )}
 
       <Can permission='update'>
-        <Button variant='contained' color='secondary' onClick={handleOnClick}>
-          Resetar 2FA
+        <Button
+          variant='outlined'
+          color='secondary'
+          onClick={handleOnClick}
+          disabled={reseting}
+          startIcon={reseting ? <CircularProgress size={18} /> : <Unicons.UilSync size={18} />}
+        >
+          {reseting ? 'Resetando...' : 'Resetar 2FA'}
         </Button>
       </Can>
     </>
