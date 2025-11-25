@@ -41,11 +41,10 @@ export default function Header() {
 
   return (
     <StyledAppBar
-      position="fixed"
+      position="relative"
       color="inherit"
       elevation={0}
       sx={{
-        left: 0,
         width: '100%',
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       }}
@@ -53,7 +52,7 @@ export default function Header() {
       <Toolbar
         sx={{
           minHeight: '70px !important',
-          px: 0,
+          px: 3,
           gap: 2,
           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         }}
@@ -64,7 +63,7 @@ export default function Header() {
             display: 'flex',
             alignItems: 'center',
             gap: 2,
-            ml: { xs: 2, sm: `calc(${sidebarWidth}px - 230px)` },
+            ml: '50px'
           }}
         >
           <EnvironmentsMenu />
