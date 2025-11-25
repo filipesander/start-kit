@@ -5,7 +5,7 @@ import BottomNavigation from '@/Layouts/Components/BottomNavigation';
 import { Head, usePage } from '@inertiajs/react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import '../../../css/toast-custom.css';
+import '../../css/toast-custom.css';
 import {Box, useMediaQuery} from '@mui/material';
 import FlashNotifications from './Components/FlashNotifications';
 import Sidebar from "@/Layouts/Components/Sidebar";

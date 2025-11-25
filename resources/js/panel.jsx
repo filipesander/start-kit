@@ -16,12 +16,12 @@ const AppWithLoader = ({ App, props }) => {
     const startLoading = () => setLoading(true);
     const finishLoading = () => setLoading(false);
 
-    router.on('start', startLoading);
-    router.on('finish', finishLoading);
+    const removeStartListener = router.on('start', startLoading);
+    const removeFinishListener = router.on('finish', finishLoading);
 
     return () => {
-      router.off('start', startLoading);
-      router.off('finish', finishLoading);
+      removeStartListener();
+      removeFinishListener();
     };
   }, []);
 
