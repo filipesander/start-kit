@@ -3,6 +3,7 @@ import Delete from "@/Components/ButtonAction/Delete";
 import Edit from "@/Components/ButtonAction/Edit";
 import Can from "@/Components/Can";
 import DataTable from "@/Components/DataTable";
+import TableFilters from "@/Components/TableFilters";
 import withAuthenticated from "@/hoc/withAuthenticated";
 import DefaultPage from "@/Layouts/Components/DefaultPage";
 import { Link as InertiaLink } from "@inertiajs/react";
@@ -69,8 +70,29 @@ const columns = [
   },
 ];
 
+// Configuração dos filtros
+const filterConfig = [
+  {
+    field: 'id',
+    label: 'ID',
+    type: 'text',
+    operator: 'equals',
+  },
+  {
+    field: 'name',
+    label: 'Nome',
+    type: 'text',
+    operator: 'contains',
+  },
+];
+
 const List = () => {
   const [selectedRows, setSelectedRows] = useState([]);
+  const [filters, setFilters] = useState({});
+
+  const handleFilterChange = (newFilters) => {
+    setFilters(newFilters);
+  };
 
   return (
     <DefaultPage
@@ -78,9 +100,16 @@ const List = () => {
         <Create route={route('panel.main.users.create')} label='Registrar' />,
       ]}
     >
+      <TableFilters
+        filters={filterConfig}
+        onFilterChange={handleFilterChange}
+        initialValues={filters}
+      />
+
       <DataTable
         url={route('panel.main.users.index')}
         columns={columns}
+        externalFilters={filters}
         checkboxSelection
         onSelectionModelChange={setSelectedRows}
         disableSelectionOnClick

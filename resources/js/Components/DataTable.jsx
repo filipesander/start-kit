@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useMemo } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import qs from 'qs';
 import http from "@/Libs/Http";
@@ -29,7 +29,7 @@ export default function DataTable({ url, columns, data, pageSize, rowsPerPageOpt
       })),
   };
 
-  const config = {
+  const config = useMemo(() => ({
     ...dataGridProps,
     columns: columns.map(column => {
       if (!column.renderCell) {
@@ -66,7 +66,7 @@ export default function DataTable({ url, columns, data, pageSize, rowsPerPageOpt
     pagination: true,
     paginationMode: serverSide ? 'server' : 'client',
     loading: false,
-  };
+  }), [columns, dataGridProps, data, pageSize, rowsPerPageOptions, serverSide]);
 
   const [error, setError] = useState(null);
 
@@ -171,10 +171,14 @@ export default function DataTable({ url, columns, data, pageSize, rowsPerPageOpt
       .finally(() => setLoading(false));
   };
 
+  // Memoiza o JSON dos filtros externos para evitar rerenders desnecessários
+  const externalFiltersJson = useMemo(() => JSON.stringify(externalFilters), [externalFilters]);
+
   // Atualiza filtros externos quando mudam
   useEffect(() => {
-    setCurrentExternalFilters(externalFilters);
-  }, [externalFilters]);
+    const newFilters = JSON.parse(externalFiltersJson);
+    setCurrentExternalFilters(newFilters);
+  }, [externalFiltersJson]);
 
   if (serverSide) {
     useEffect(() => {
@@ -185,7 +189,6 @@ export default function DataTable({ url, columns, data, pageSize, rowsPerPageOpt
       currentSortModel,
       currentFilterModel,
       currentExternalFilters,
-      columns,
     ]);
   }
 
