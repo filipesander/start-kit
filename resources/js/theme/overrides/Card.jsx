@@ -7,19 +7,13 @@ export default function Card(theme) {
     MuiCard: {
       styleOverrides: {
         root: {
-          boxShadow: `0 2px 12px ${alpha(theme.palette.common.black, 0.04)}`,
+          boxShadow: 'none',
           borderRadius: 16,
           position: 'relative',
           zIndex: 0,
-          border: `1px solid ${theme.palette.divider}`,
+          border: `1px solid ${alpha('#7c3aed', 0.2)}`,
           background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.01)} 0%, ${alpha(theme.palette.secondary.main, 0.01)} 100%)`,
           backdropFilter: 'blur(10px)',
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          '&:hover': {
-            boxShadow: `0 8px 24px ${alpha(theme.palette.primary.main, 0.12)}`,
-            borderColor: alpha(theme.palette.primary.main, 0.3),
-            transform: 'translateY(-2px)',
-          },
         },
       },
     },

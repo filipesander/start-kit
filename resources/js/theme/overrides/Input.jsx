@@ -56,7 +56,7 @@ export default function Input(theme) {
           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
           '& .MuiOutlinedInput-notchedOutline': {
             borderColor: alpha(theme.palette.grey[500], 0.32),
-            borderWidth: 2,
+            borderWidth: 1,
           },
           '&:hover': {
             '& .MuiOutlinedInput-notchedOutline': {
@@ -67,6 +67,7 @@ export default function Input(theme) {
             boxShadow: `0 0 0 3px ${alpha(theme.palette.primary.main, 0.1)}`,
             '& .MuiOutlinedInput-notchedOutline': {
               borderColor: theme.palette.primary.main,
+              borderWidth: 2,
             },
           },
           '&.Mui-disabled': {
@@ -81,7 +82,7 @@ export default function Input(theme) {
       styleOverrides: {
         root: {
           '& .MuiInputLabel-root': {
-            fontWeight: 600,
+            fontWeight: 500,
           },
         },
       },
