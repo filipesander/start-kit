@@ -1,11 +1,12 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
-import {Box, List, ListItemText, styled, useMediaQuery, Typography, alpha, IconButton, Tooltip, Backdrop} from '@mui/material';
+import React, {useContext, useEffect, useMemo, useRef, useState} from 'react';
+import {Box, List, ListItemText, styled, useMediaQuery, Typography, alpha, IconButton, Tooltip, Backdrop, Chip, Button, LinearProgress, Stack} from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
 import {router, usePage} from '@inertiajs/react';
 import {SidebarContext} from '../../Authenticated';
 import {StyledNavItem, StyledNavItemIcon} from "@/Layouts/Components/Sidebar/styles";
 import * as Unicons from '@iconscout/react-unicons';
 import classNames from "classnames";
+import ThemeToggle from '@/Layouts/Components/ThemeToggle';
 
 const openedMixin = (theme, width) => ({
   width: width,
@@ -67,9 +68,22 @@ export default function Sidebar({}) {
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
   const drawerRef = useRef(null);
+  const [lastSync, setLastSync] = useState(() => new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => setLastSync(new Date()), 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const formattedLastSync = useMemo(() => lastSync.toLocaleTimeString('pt-BR', {
+    hour: '2-digit',
+    minute: '2-digit',
+  }), [lastSync]);
 
   // Get only current environment modules
   const currentEnvironment = user.current_environment;
+  const environmentChipLabel = currentEnvironment?.label || 'Ambiente ativo';
+  const environmentChipCode = currentEnvironment?.slug ? currentEnvironment.slug.toUpperCase() : 'OPERACIONAL';
   const currentModules = user.menu.find(env => env.slug === currentEnvironment?.slug)?.modules || [];
 
   // Swipe gesture detection - mínimo 50px para considerar um swipe
@@ -153,23 +167,25 @@ export default function Sidebar({}) {
           }
         }}
       >
-        {/* Logo Section */}
+        {/* Logo / controls section */}
         <Box
           sx={{
-            height: '70px',
+            position: 'relative',
+            height: 70,
             display: 'flex',
             alignItems: 'center',
             justifyContent: sidebar.isCollapsed ? 'center' : 'space-between',
-            px: sidebar.isCollapsed ? 1 : 2,
+            px: sidebar.isCollapsed ? 1.5 : 2,
             borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
             background: (theme) => theme.palette.mode === 'dark'
               ? alpha(theme.palette.background.paper, 0.6)
               : alpha(theme.palette.background.paper, 0.8),
             backdropFilter: 'blur(10px)',
             transition: 'all 0.3s ease',
+            gap: 1.5,
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center', minWidth: 0, flex: sidebar.isCollapsed ? 0 : 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', minWidth: 0, flex: sidebar.isCollapsed ? 'unset' : 1 }}>
             <Tooltip title={sidebar.isCollapsed ? "Sistema" : ""} placement="right" arrow>
               <Box
                 sx={{
@@ -194,56 +210,79 @@ export default function Sidebar({}) {
               </Box>
             </Tooltip>
             {!sidebar.isCollapsed && (
-              <Typography
-                variant="h6"
-                sx={{
-                  fontWeight: 700,
-                  background: (theme) => theme.palette.gradients?.primary || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                  backgroundClip: 'text',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  fontSize: '1.25rem',
-                  letterSpacing: '-0.5px',
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                }}
-              >
-                Sistema
-              </Typography>
+              <Box sx={{ minWidth: 0 }}>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontWeight: 700,
+                    background: (theme) => theme.palette.gradients?.primary || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    backgroundClip: 'text',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    fontSize: '1.25rem',
+                    letterSpacing: '-0.5px',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  Sistema
+                </Typography>
+              </Box>
             )}
           </Box>
 
-          {/* Toggle Button - apenas no desktop */}
-          {!isMobile && (
-            <Tooltip title={sidebar.isCollapsed ? "Expandir menu" : "Recolher menu"} placement="right" arrow>
-              <IconButton
-                onClick={sidebar.toggleCollapsed}
-                sx={{
-                  width: 36,
-                  height: 36,
-                  background: (theme) => alpha(theme.palette.primary.main, 0.1),
-                  transition: 'all 0.3s ease',
-                  '&:hover': {
-                    background: (theme) => alpha(theme.palette.primary.main, 0.2),
-                    transform: 'scale(1.1)',
-                  },
-                }}
-              >
-                {sidebar.isCollapsed ? (
-                  <Unicons.UilAngleDoubleRight size={20} color="currentColor" />
-                ) : (
-                  <Unicons.UilAngleDoubleLeft size={20} color="currentColor" />
-                )}
-              </IconButton>
-            </Tooltip>
-          )}
+          <Stack
+            direction="row"
+            spacing={1}
+            alignItems="center"
+            sx={{
+              position: sidebar.isCollapsed ? 'absolute' : 'static',
+              right: sidebar.isCollapsed ? 12 : 'auto',
+              top: sidebar.isCollapsed ? '50%' : 'auto',
+              transform: sidebar.isCollapsed ? 'translateY(-50%)' : 'none',
+            }}
+          >
+
+
+            {!isMobile && (
+              <Tooltip title={sidebar.isCollapsed ? "Expandir menu" : "Recolher menu"} placement="bottom" arrow>
+                <IconButton
+                  onClick={sidebar.toggleCollapsed}
+                  sx={{
+                    width: 36,
+                    height: 36,
+                    background: (theme) => alpha(theme.palette.primary.main, 0.1),
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      background: (theme) => alpha(theme.palette.primary.main, 0.2),
+                      transform: 'scale(1.1)',
+                    },
+                  }}
+                >
+                  {sidebar.isCollapsed ? (
+                    <Unicons.UilAngleDoubleRight size={20} color="currentColor" />
+                  ) : (
+                    <Unicons.UilAngleDoubleLeft size={20} color="currentColor" />
+                  )}
+                </IconButton>
+              </Tooltip>
+            )}
+          </Stack>
         </Box>
 
-        <Box sx={{ pt: 2 }}>
-          <NavSection data={currentModules} isCollapsed={sidebar.isCollapsed} />
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            height: 'calc(100% - 70px)',
+          }}
+        >
+          <Box sx={{ pt: 2, flex: 1, overflowY: 'auto' }}>
+            <NavSection data={currentModules} isCollapsed={sidebar.isCollapsed} />
+          </Box>
+          <LogOut />
         </Box>
-        <LogOut />
       </Drawer>
     </>
   );
@@ -251,6 +290,7 @@ export default function Sidebar({}) {
 
 function NavSection({data = [], isCollapsed, ...other}) {
   const {auth: {user}} = usePage().props;
+  const hasSections = !isCollapsed && data.length > 0;
 
   return (
     <Box {...other}>
@@ -291,8 +331,27 @@ function NavItem({item, isActive, isCollapsed}) {
 
       {!isCollapsed && (
         <>
-          <ListItemText disableTypography primary={label}/>
-          {info && info}
+          <ListItemText
+            disableTypography
+            primary={label}
+            sx={{
+              fontWeight: 600,
+              letterSpacing: '-0.2px',
+            }}
+          />
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            {info && info}
+            <Box
+              sx={{
+                width: 8,
+                height: 8,
+                borderRadius: '50%',
+                backgroundColor: isActive ? 'success.main' : 'transparent',
+                boxShadow: isActive ? (theme) => `0 0 0 6px ${alpha(theme.palette.success.main, 0.2)}` : 'none',
+                transition: 'all 0.3s ease',
+              }}
+            />
+          </Box>
         </>
       )}
     </StyledNavItem>
