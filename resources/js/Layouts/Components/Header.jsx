@@ -1,123 +1,200 @@
-import React, { useContext } from 'react';
-import { Box, AppBar, Toolbar, Typography, alpha, styled, Divider } from '@mui/material';
-import * as Unicons from '@iconscout/react-unicons';
-import UserMenu from './UserMenu';
+import React from 'react';
+import { usePage } from '@inertiajs/react';
+import {
+  AppBar,
+  Box,
+  Divider,
+  InputBase,
+  Toolbar,
+  Typography,
+  alpha,
+  styled,
+} from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 import EnvironmentsMenu from './EnvironmentsMenu';
 import NotificationsMenu from './NotificationsMenu';
 import ThemeToggle from './ThemeToggle';
-import { SidebarContext } from '../Authenticated';
+import UserMenu from './UserMenu';
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   background: theme.palette.mode === 'dark'
-    ? 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #06b6d4 100%)'
-    : 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #06b6d4 100%)',
-  backdropFilter: 'blur(20px)',
-  WebkitBackdropFilter: 'blur(20px)',
+    ? `linear-gradient(135deg, ${alpha(theme.palette.primary.dark, 0.9)} 0%, ${alpha(theme.palette.secondary.dark, 0.9)} 100%)`
+    : `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.9)} 0%, ${alpha(theme.palette.secondary.main, 0.9)} 100%)`,
+  backdropFilter: 'blur(18px)',
+  WebkitBackdropFilter: 'blur(18px)',
+  borderBottom: `1px solid ${alpha(theme.palette.common.white, 0.15)}`,
   boxShadow: theme.palette.mode === 'dark'
-    ? `0 8px 32px ${alpha('#667eea', 0.4)}, 0 4px 16px ${alpha(theme.palette.common.black, 0.5)}`
-    : `0 8px 32px ${alpha('#667eea', 0.3)}, 0 4px 16px ${alpha('#764ba2', 0.2)}`,
-  borderBottom: `1px solid ${alpha(theme.palette.common.white, 0.1)}`,
-  zIndex: theme.zIndex.drawer,
-  position: 'relative',
-  overflow: 'hidden',
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    background: theme.palette.mode === 'dark'
-      ? 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 50%, rgba(6, 182, 212, 0.1) 100%)'
-      : 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
-    backdropFilter: 'blur(10px)',
-    zIndex: -1,
+    ? `0 12px 24px ${alpha(theme.palette.common.black, 0.6)}`
+    : `0 10px 24px ${alpha(theme.palette.primary.main, 0.35)}`,
+}));
+
+const SearchContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  borderRadius: 999,
+  padding: theme.spacing(0.75, 2),
+  width: '100%',
+  maxWidth: 420,
+  background: alpha(theme.palette.common.white, 0.12),
+  border: `1px solid ${alpha(theme.palette.common.white, 0.2)}`,
+  boxShadow: `0 8px 20px ${alpha(theme.palette.common.black, 0.2)}`,
+  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+  '&:focus-within': {
+    background: alpha(theme.palette.common.white, 0.18),
+    borderColor: alpha(theme.palette.common.white, 0.4),
+    boxShadow: `0 16px 32px ${alpha(theme.palette.primary.main, 0.35)}`,
   },
 }));
 
 export default function Header() {
-  const sidebar = useContext(SidebarContext);
-  const sidebarWidth = sidebar.isCollapsed ? sidebar.collapsedWidth : sidebar.width;
+  const {
+    auth: { user },
+  } = usePage().props;
+
+  const moduleLabel = user?.current_module?.label ?? 'Painel';
+  const environmentLabel = user?.current_environment?.label ?? 'Ambiente ativo';
+
+  const handleSearchKeyDown = (event) => {
+    if (event.key !== 'Enter') return;
+
+    const query = event.currentTarget.value.trim();
+    if (!query) return;
+
+    window.dispatchEvent(new CustomEvent('global-search', { detail: query }));
+  };
 
   return (
-    <StyledAppBar
-      position="relative"
-      color="inherit"
-      elevation={0}
-      sx={{
-        width: '100%',
-        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      }}
-    >
+    <StyledAppBar position="relative" color="transparent" elevation={0}>
       <Toolbar
         sx={{
-          minHeight: '70px !important',
-          px: 3,
           gap: 2,
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          minHeight: '76px !important',
+          px: { xs: 2, md: 3 },
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
         }}
       >
-        {/* Environment Selector */}
+        {/* Left cluster */}
         <Box
           sx={{
             display: 'flex',
             alignItems: 'center',
             gap: 2,
-            ml: '50px'
+            minWidth: 0,
+            flex: 1,
           }}
         >
           <EnvironmentsMenu />
+
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              minWidth: 0,
+              gap: 0.25,
+              color: '#fff',
+            }}
+          >
+            <Typography
+              variant="caption"
+              sx={{
+                letterSpacing: 2,
+                textTransform: 'uppercase',
+                color: 'rgba(255, 255, 255, 0.7)',
+              }}
+            >
+              {environmentLabel}
+            </Typography>
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: 700,
+                letterSpacing: -0.4,
+                color: '#fff',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {moduleLabel}
+            </Typography>
+          </Box>
         </Box>
 
-        {/* Spacer */}
-        <Box sx={{ flexGrow: 1 }} />
+        {/* Search */}
+        <SearchContainer sx={{ flex: 1 }}>
+          <SearchIcon sx={{ color: 'rgba(255, 255, 255, 0.85)' }} fontSize="small" />
+          <InputBase
+            placeholder="Buscar em todo o sistema"
+            inputProps={{ 'aria-label': 'buscar em todo o sistema' }}
+            onKeyDown={handleSearchKeyDown}
+            sx={{
+              ml: 1,
+              flex: 1,
+              color: '#fff',
+              '& .MuiInputBase-input': {
+                padding: 0,
+              },
+            }}
+          />
+          <Box
+            sx={{
+              ml: 1,
+              px: 1,
+              py: 0.25,
+              borderRadius: 2,
+              border: '1px solid rgba(255, 255, 255, 0.25)',
+              color: 'rgba(255, 255, 255, 0.85)',
+              fontSize: '0.75rem',
+              fontWeight: 600,
+            }}
+          >
+            Ctrl + K
+          </Box>
+        </SearchContainer>
 
-        {/* Actions Group */}
+        {/* Actions */}
         <Box
           sx={{
             display: 'flex',
             alignItems: 'center',
-            gap: 1,
-            px: 1.5,
-            py: 0.5,
-            borderRadius: 3,
-            background: (theme) => alpha(theme.palette.common.white, 0.15),
-            backdropFilter: 'blur(10px)',
-            border: (theme) => `1px solid ${alpha(theme.palette.common.white, 0.2)}`,
-            boxShadow: (theme) => `0 4px 16px ${alpha(theme.palette.common.black, 0.1)}`,
+            gap: 1.5,
+            flexWrap: 'nowrap',
           }}
         >
-          {/* Theme Toggle */}
-          <ThemeToggle />
-
-          {/* Divider */}
-          <Divider
-            orientation="vertical"
-            flexItem
+          <Box
             sx={{
-              mx: 0.5,
-              height: 32,
-              alignSelf: 'center',
-              borderColor: (theme) => alpha(theme.palette.common.white, 0.3),
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
+              px: 1.25,
+              py: 0.5,
+              borderRadius: 999,
+              background: (theme) => alpha(theme.palette.common.white, 0.12),
+              border: (theme) => `1px solid ${alpha(theme.palette.common.white, 0.25)}`,
+              boxShadow: (theme) => `0 6px 16px ${alpha(theme.palette.common.black, 0.2)}`,
             }}
-          />
-
-          {/* Notifications */}
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          >
+            <ThemeToggle />
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{
+                borderColor: (theme) => alpha(theme.palette.common.white, 0.3),
+                height: 20,
+              }}
+            />
             <NotificationsMenu />
           </Box>
-        </Box>
 
-        {/* User Menu */}
-        <Box
-          sx={{
-            ml: 1,
-            pl: 2,
-            pr: { xs: 2, sm: 3 },
-            borderLeft: (theme) => `1px solid ${alpha(theme.palette.common.white, 0.2)}`,
-          }}
-        >
-          <UserMenu />
+          <Box
+            sx={{
+              pl: 1.5,
+              borderLeft: (theme) => `1px solid ${alpha(theme.palette.common.white, 0.25)}`,
+            }}
+          >
+            <UserMenu />
+          </Box>
         </Box>
       </Toolbar>
     </StyledAppBar>
