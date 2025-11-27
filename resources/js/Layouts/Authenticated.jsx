@@ -9,7 +9,6 @@ import '../../css/toast-custom.css';
 import {Box, useMediaQuery} from '@mui/material';
 import FlashNotifications from './Components/FlashNotifications';
 import Sidebar from "@/Layouts/Components/Sidebar";
-import CommandPalette from '@/Layouts/Components/CommandPalette';
 
 const defaultSidebarConfig = {
   width: 280,
@@ -60,7 +59,6 @@ const Authenticated = ({ title, children }) => {
         }}
       >
         <FlashNotifications />
-        <CommandPalette />
         <ToastContainer
           position="top-right"
           autoClose={5000}
