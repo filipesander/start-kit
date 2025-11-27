@@ -53,6 +53,8 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\Authenticated\DetectCurrentEnvironmentAndModule::class,
             \App\Http\Middleware\Authenticated\GeneratePermissions::class,
             \App\Http\Middleware\Authenticated\GenerateMenu::class,
+            \App\Http\Middleware\SuperAdminSession::class,
+            \App\Http\Middleware\CompanySession::class,
 
             'inertia:panel',
         ],
@@ -77,5 +79,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'inertia' => \App\Http\Middleware\HandleInertiaRequests::class,
+        'superadmin' => \App\Http\Middleware\EnsureSuperAdmin::class,
     ];
 }

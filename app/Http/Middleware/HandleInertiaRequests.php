@@ -36,6 +36,22 @@ class HandleInertiaRequests extends Middleware
         $guard = Auth::guard()->getSelfName();
         $user = Auth::user();
 
+        // Prepara dados do usuário com relações dinâmicas
+        $userData = $user ? $user->toArray() : null;
+
+        // Adiciona relações dinâmicas se existirem
+        if ($user) {
+            if ($user->relationLoaded('company')) {
+                $userData['company'] = $user->company;
+            }
+            if ($user->relationLoaded('companies')) {
+                $userData['companies'] = $user->companies;
+            }
+            if ($user->relationLoaded('groups_by_company')) {
+                $userData['groups_by_company'] = $user->groups_by_company;
+            }
+        }
+
         return array_merge(parent::share($request), [
             'app' => [
                 'environment' => app()->environment(),
@@ -44,7 +60,7 @@ class HandleInertiaRequests extends Middleware
             ],
             'auth' => [
                 'guard' => $guard,
-                'user' => $user,
+                'user' => $userData,
             ],
             'flash' => [
                 'success' => session('success'),

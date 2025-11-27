@@ -17,6 +17,7 @@ class User extends Authenticatable implements AuditableContract
     public const ROLE_DIRECTOR = 1;
     public const ROLE_ADMINISTRATOR = 2;
     public const ROLE_MANAGER = 3;
+    public const ROLE_SUPERADMIN = 99;
 
     /**
      * The attributes that are mass assignable.
@@ -66,5 +67,46 @@ class User extends Authenticatable implements AuditableContract
     public function groups()
     {
         return $this->belongsToMany(Group::class);
+    }
+
+    public function companies()
+    {
+        return $this->belongsToMany(Company::class)
+            ->withPivot('is_owner')
+            ->withTimestamps();
+    }
+
+    public function ownedCompanies()
+    {
+        return $this->belongsToMany(Company::class)
+            ->wherePivot('is_owner', true)
+            ->withTimestamps();
+    }
+
+    public function isSuperAdmin()
+    {
+        return $this->role === self::ROLE_SUPERADMIN;
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function originalCompany()
+    {
+        return $this->belongsTo(Company::class, 'original_company_id');
+    }
+
+    public function groupsForCurrentCompany()
+    {
+        if (!$this->company_id) {
+            return $this->groups();
+        }
+
+        return $this->groups()->where(function ($query) {
+            $query->whereNull('groups.company_id')
+                  ->orWhere('groups.company_id', $this->company_id);
+        });
     }
 }

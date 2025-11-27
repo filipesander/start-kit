@@ -5,6 +5,7 @@ import { ThemeContextProvider } from '@/contexts/ThemeContext';
 import { router } from '@inertiajs/react';
 import PageLoader from '@/Components/PageLoader';
 import { useState, useEffect } from 'react';
+import { SnackbarProvider } from 'notistack';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Start Kit';
 
@@ -41,7 +42,16 @@ createInertiaApp({
 
     root.render(
       <ThemeContextProvider>
-        <AppWithLoader App={App} props={props} />
+        <SnackbarProvider
+          maxSnack={3}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          autoHideDuration={3000}
+        >
+          <AppWithLoader App={App} props={props} />
+        </SnackbarProvider>
       </ThemeContextProvider>
     );
   },

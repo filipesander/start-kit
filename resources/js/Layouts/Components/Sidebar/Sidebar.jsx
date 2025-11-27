@@ -7,6 +7,7 @@ import {StyledNavItem, StyledNavItemIcon} from "@/Layouts/Components/Sidebar/sty
 import * as Unicons from '@iconscout/react-unicons';
 import classNames from "classnames";
 import ThemeToggle from '@/Layouts/Components/ThemeToggle';
+import ChangeCompany from '@/Layouts/Components/ChangeCompany';
 
 const openedMixin = (theme, width) => ({
   width: width,
@@ -279,6 +280,7 @@ export default function Sidebar({}) {
           }}
         >
           <Box sx={{ pt: 2, flex: 1, overflowY: 'auto' }}>
+            {!sidebar.isCollapsed && <ChangeCompany />}
             <NavSection data={currentModules} isCollapsed={sidebar.isCollapsed} />
           </Box>
           <LogOut />
