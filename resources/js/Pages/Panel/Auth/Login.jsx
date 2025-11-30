@@ -45,7 +45,7 @@ export default function Login({ status, denied, canResetPassword }) {
 
   return (
     <Guest title='Entrar'>
-      <Stack spacing={3} sx={{ width: '100%' }}>
+      <Stack spacing={{ xs: 1, sm: 1.5, md: 2.5 }} sx={{ width: '100%' }}>
         {status && (
           <Alert
             severity='success'
@@ -73,7 +73,7 @@ export default function Login({ status, denied, canResetPassword }) {
 
 
         <form onSubmit={submit}>
-          <Stack spacing={2.5}>
+          <Stack spacing={{ xs: 1, sm: 1.2, md: 2 }}>
             <TextField
               variant='outlined'
               margin='normal'
@@ -190,8 +190,8 @@ export default function Login({ status, denied, canResetPassword }) {
                 justifyContent: 'space-between',
                 alignItems: { xs: 'flex-start', sm: 'center' },
                 flexDirection: { xs: 'column', sm: 'row' },
-                gap: 2,
-                mt: 1,
+                gap: { xs: 1, sm: 1.5, md: 2 },
+                mt: { xs: 0.5, sm: 0.75, md: 1 },
               }}
             >
               <FormControlLabel
@@ -264,8 +264,8 @@ export default function Login({ status, denied, canResetPassword }) {
               fullWidth
               disabled={processing}
               sx={{
-                py: 1.5,
-                fontSize: '1rem',
+                py: { xs: 1.2, md: 1.5 },
+                fontSize: { xs: '0.9rem', md: '1rem' },
                 fontWeight: 600,
                 textTransform: 'none',
                 borderRadius: 3,
@@ -294,7 +294,8 @@ export default function Login({ status, denied, canResetPassword }) {
               fullWidth
               sx={{
                 borderRadius: 3,
-                py: 1.25,
+                py: { xs: 1, md: 1.25 },
+                fontSize: { xs: '0.875rem', md: '1rem' },
                 fontWeight: 600,
                 textTransform: 'none',
               }}
@@ -308,25 +309,25 @@ export default function Login({ status, denied, canResetPassword }) {
           variant='outlined'
           sx={{
             borderRadius: 3,
-            px: 3,
-            py: 2.5,
+            px: { xs: 1.5, sm: 2, md: 2.5 },
+            py: { xs: 1.2, sm: 1.5, md: 2 },
             borderColor: (theme) => alpha(theme.palette.primary.main, 0.2),
             backgroundColor: (theme) => alpha(theme.palette.primary.light, 0.05),
           }}
         >
-          <Typography variant='subtitle2' sx={{ fontWeight: 600, mb: 1 }}>
+          <Typography variant='subtitle2' sx={{ fontWeight: 600, mb: { xs: 0.5, sm: 0.75, md: 1 }, fontSize: { xs: '0.75rem', sm: '0.8rem', md: '0.875rem' } }}>
             Precisa de ajuda?
           </Typography>
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <SupportAgent fontSize='small' color='primary' />
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 0.75, sm: 1.5, md: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.5, sm: 1 } }}>
+              <SupportAgent sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }} color='primary' />
               <Tooltip title='Contato direto com o time de suporte.'>
-                <Typography variant='body2'>Falar com o suporte</Typography>
+                <Typography variant='body2' sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem', md: '0.875rem' } }}>Falar com o suporte</Typography>
               </Tooltip>
             </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <ChatBubbleOutline fontSize='small' color='primary' />
-              <Typography variant='body2'>Abrir chat ao vivo</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.5, sm: 1 } }}>
+              <ChatBubbleOutline sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }} color='primary' />
+              <Typography variant='body2' sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem', md: '0.875rem' } }}>Abrir chat ao vivo</Typography>
             </Box>
           </Stack>
         </Paper>

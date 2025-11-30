@@ -32,7 +32,7 @@ const Guest = ({ title, children }) => {
             background: 'linear-gradient(120deg, #0f172a 0%, #1d4ed8 50%, #9333ea 100%)',
             position: 'relative',
             overflow: 'hidden',
-            py: { xs: 6, md: 0 },
+            py: { xs: 5, sm: 5, md: 6, lg: 4 },
             '&:before': {
               content: '""',
               position: 'absolute',
@@ -76,7 +76,7 @@ const Guest = ({ title, children }) => {
               <Box
                 sx={{
                   borderRadius: 5,
-                  p: 5,
+                  p: 3.5,
                   color: 'white',
                   background: 'linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)',
                   border: '1px solid rgba(255,255,255,0.2)',
@@ -84,10 +84,10 @@ const Guest = ({ title, children }) => {
                   boxShadow: '0 25px 80px rgba(15, 23, 42, 0.5)',
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: 4,
+                  gap: 3,
                 }}
               >
-                <Stack spacing={2}>
+                <Stack spacing={1.5}>
                   <Typography variant="overline" sx={{ letterSpacing: 2, opacity: 0.8 }}>
                     Painel Inteligente
                   </Typography>
@@ -101,13 +101,13 @@ const Guest = ({ title, children }) => {
 
                 <Divider sx={{ borderColor: 'rgba(255,255,255,0.2)' }} />
 
-                <Stack spacing={3}>
+                <Stack spacing={2.5}>
                   {heroHighlights.map((item) => (
                     <Box
                       key={item.label}
                       sx={{
                         borderRadius: 3,
-                        p: 3,
+                        p: 2.5,
                         background: 'rgba(255, 255, 255, 0.06)',
                         border: '1px solid rgba(255,255,255,0.1)',
                         boxShadow: '0 15px 30px rgba(0,0,0,0.2)',
@@ -150,19 +150,19 @@ const Guest = ({ title, children }) => {
                   },
                 }}
               >
-                <CardContent sx={{ p: { xs: 4, md: 5 } }}>
+                <CardContent sx={{ p: { xs: 2, sm: 2.5, md: 3.5 } }}>
                   {/* Logo */}
                   <Box
                     sx={{
                       display: 'flex',
                       justifyContent: 'center',
-                      mb: 3,
+                      mb: { xs: 1, sm: 1.5, md: 2 },
                     }}
                   >
                     <Box
                       sx={{
-                        width: 80,
-                        height: 80,
+                        width: { xs: 50, sm: 60, md: 80 },
+                        height: { xs: 50, sm: 60, md: 80 },
                         borderRadius: 3,
                         display: 'flex',
                         alignItems: 'center',
@@ -171,7 +171,7 @@ const Guest = ({ title, children }) => {
                         boxShadow: '0 8px 24px rgba(124, 58, 237, 0.3)',
                       }}
                     >
-                      <ApplicationLogo size="3rem" style={{ filter: 'brightness(0) invert(1)' }} />
+                      <ApplicationLogo size={{ xs: '1.8rem', sm: '2.2rem', md: '3rem' }} style={{ filter: 'brightness(0) invert(1)' }} />
                     </Box>
                   </Box>
 
@@ -181,7 +181,8 @@ const Guest = ({ title, children }) => {
                     align='center'
                     sx={{
                       fontWeight: 700,
-                      mb: 1,
+                      mb: { xs: 0.3, sm: 0.5, md: 0.75 },
+                      fontSize: { xs: '1.3rem', sm: '1.5rem', md: '2.125rem' },
                       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                       backgroundClip: 'text',
                       WebkitBackgroundClip: 'text',
@@ -195,7 +196,10 @@ const Guest = ({ title, children }) => {
                     variant='body2'
                     align='center'
                     color='text.secondary'
-                    sx={{ mb: 4 }}
+                    sx={{
+                      mb: { xs: 1.5, sm: 2, md: 3 },
+                      fontSize: { xs: '0.8rem', sm: '0.875rem' }
+                    }}
                   >
                     Bem-vindo de volta! Por favor, faça login.
                   </Typography>
@@ -211,16 +215,16 @@ const Guest = ({ title, children }) => {
           <Box
             sx={{
               position: 'absolute',
-              bottom: 20,
+              bottom: { xs: 20, sm: 25, md: 40, lg: 30 },
               left: 0,
               right: 0,
               textAlign: 'center',
               color: 'white',
-              fontSize: '0.875rem',
+              fontSize: { xs: '0.75rem', sm: '0.875rem' },
               opacity: 0.8,
             }}
           >
-            <Typography variant="caption" sx={{ color: 'white' }}>
+            <Typography variant="caption" sx={{ color: 'white', fontSize: 'inherit' }}>
               © {new Date().getFullYear()} - Todos os direitos reservados
             </Typography>
           </Box>
