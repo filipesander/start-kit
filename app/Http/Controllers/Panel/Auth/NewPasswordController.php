@@ -61,7 +61,7 @@ class NewPasswordController extends Controller
 
         // Redireciona para a tela de login ao concluir a redefinição ou lança erros.
         if ($status == Password::PASSWORD_RESET) {
-            return redirect()->route('login')->with('status', __($status));
+            return redirect()->route('panel.login')->with('status', __($status));
         }
 
         throw ValidationException::withMessages([

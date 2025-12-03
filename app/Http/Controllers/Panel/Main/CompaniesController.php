@@ -210,7 +210,7 @@ class CompaniesController extends Controller
 
         if ($user->isSuperAdmin() && !$user->company_id) {
             $key = "user:{$user->id}:company";
-            Cache::put($key, $company, now()->addHour());
+            Cache::put($key, $company->id, now()->addHour());
 
             $user->setRelation('company', $company);
 

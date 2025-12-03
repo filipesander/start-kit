@@ -4,6 +4,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ThemeContextProvider } from '@/contexts/ThemeContext';
 import { router } from '@inertiajs/react';
 import PageLoader from '@/Components/PageLoader';
+import ErrorBoundary from '@/Components/ErrorBoundary';
 import { useState, useEffect } from 'react';
 import { SnackbarProvider } from 'notistack';
 
@@ -50,7 +51,9 @@ createInertiaApp({
           }}
           autoHideDuration={3000}
         >
-          <AppWithLoader App={App} props={props} />
+          <ErrorBoundary>
+            <AppWithLoader App={App} props={props} />
+          </ErrorBoundary>
         </SnackbarProvider>
       </ThemeContextProvider>
     );

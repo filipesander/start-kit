@@ -9,21 +9,22 @@ export default function Can({ permission, environment, module, children }) {
     },
   } = usePage();
 
-  const environmentToCheck = environment || user.current_environment.slug;
-  const moduleToCheck = module || user.current_module.slug;
+  const environmentToCheck = environment ?? user?.current_environment?.slug;
+  const moduleToCheck = module ?? user?.current_module?.slug;
 
-  if (typeof environmentToCheck === 'undefined' || ! environmentToCheck) {
+  if (!environmentToCheck || !moduleToCheck) {
     return (<></>);
   }
 
-  if (typeof moduleToCheck === 'undefined' || ! moduleToCheck) {
+  const modulePermissions = user?.permissions?.[environmentToCheck]?.[moduleToCheck];
+
+  if (!modulePermissions) {
     return (<></>);
   }
 
-  const denied = user.permissions[environmentToCheck][moduleToCheck][permission] !== 1
-    && user.permissions[environmentToCheck][moduleToCheck][permission] !== true;
+  const allowed = modulePermissions[permission] === 1 || modulePermissions[permission] === true;
 
-  if (denied) {
+  if (!allowed) {
     return (<></>);
   }
 

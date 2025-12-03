@@ -33,7 +33,7 @@ export default function Delete({ environment, module, route, label, size = 'smal
   };
 
   return (
-    <Can permission='update' environment={environment} module={module}>
+    <Can permission='delete' environment={environment} module={module}>
       {error && (
         <DefaultErrorAlert error={error} onClose={() => setError(null)} />
       )}
