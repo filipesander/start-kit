@@ -36,7 +36,7 @@ class NewPasswordController extends Controller
      * @param Request $request Requisição com token, e-mail e nova senha.
      * @return RedirectResponse
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function store(Request $request): RedirectResponse
     {
