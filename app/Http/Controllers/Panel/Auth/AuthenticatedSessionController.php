@@ -20,7 +20,9 @@ class AuthenticatedSessionController extends Controller
     protected $guard = 'panel';
 
     /**
-     * Display the login view.
+     * Exibe a tela de login do painel.
+     *
+     * @return Response
      */
     public function create(): Response
     {
@@ -31,7 +33,10 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Handle an incoming authentication request.
+     * Processa uma requisição de autenticação.
+     *
+     * @param LoginRequest $request Dados validados para login.
+     * @return RedirectResponse
      */
     public function store(LoginRequest $request): RedirectResponse
     {
@@ -53,7 +58,10 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Destroy an authenticated session.
+     * Finaliza a sessão autenticada do usuário.
+     *
+     * @param Request $request Requisição atual para manipular a sessão.
+     * @return RedirectResponse
      */
     public function destroy(Request $request): RedirectResponse
     {

@@ -8,13 +8,21 @@ use App\Models\Panel\Main\Group;
 use App\Models\Panel\Main\User;
 use App\Resources\Laratables\User as LaratablesUser;
 use Freshbitsweb\Laratables\Laratables;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class UsersController extends Controller
 {
-    public function index()
+    /**
+     * Exibe a listagem de usuários ou retorna os registros em JSON.
+     *
+     * @return Response|JsonResponse
+     */
+    public function index(): Response|JsonResponse
     {
         if (request()->expectsJson()) {
             return Laratables::recordsOf(User::class, LaratablesUser::class);
@@ -23,7 +31,12 @@ class UsersController extends Controller
         return Inertia::render('Main/Users/List');
     }
 
-    public function create()
+    /**
+     * Renderiza o formulário de criação de usuário.
+     *
+     * @return Response
+     */
+    public function create(): Response
     {
         return Inertia::render('Main/Users/Edit', [
             'user' => null,
@@ -33,7 +46,13 @@ class UsersController extends Controller
         ]);
     }
 
-    public function store(UserRequest $request)
+    /**
+     * Registra um novo usuário com seus grupos e senha.
+     *
+     * @param UserRequest $request Requisição validada com dados do usuário.
+     * @return RedirectResponse
+     */
+    public function store(UserRequest $request): RedirectResponse
     {
         DB::transaction(function () use ($request) {
             $user = new User($request->except('groups', 'password'));
@@ -50,13 +69,25 @@ class UsersController extends Controller
             ->with('success', 'Usuário registrado com sucesso!');
     }
 
-    public function show(User $user)
+    /**
+     * Redireciona para a edição do usuário selecionado.
+     *
+     * @param User $user Usuário que será exibido.
+     * @return RedirectResponse
+     */
+    public function show(User $user): RedirectResponse
     {
         return redirect()
             ->route('panel.main.users.edit', [$user->id]);
     }
 
-    public function edit(User $user)
+    /**
+     * Exibe o formulário de edição de usuário carregando seus relacionamentos.
+     *
+     * @param User $user Usuário que será editado.
+     * @return Response
+     */
+    public function edit(User $user): Response
     {
         $user->load('groups:id,name');
 
@@ -68,7 +99,14 @@ class UsersController extends Controller
         ]);
     }
 
-    public function update(UserRequest $request, User $user)
+    /**
+     * Atualiza os dados do usuário e sincroniza os grupos vinculados.
+     *
+     * @param UserRequest $request Requisição validada com dados do usuário.
+     * @param User $user Usuário que será atualizado.
+     * @return RedirectResponse
+     */
+    public function update(UserRequest $request, User $user): RedirectResponse
     {
         DB::transaction(function () use ($request, $user) {
             $data = $request->except('password', 'groups');
@@ -88,7 +126,13 @@ class UsersController extends Controller
             ->with('success', 'Usuário atualizado com sucesso!');
     }
 
-    public function destroy(User $user)
+    /**
+     * Remove um usuário retornando o status da exclusão.
+     *
+     * @param User $user Usuário que será removido.
+     * @return JsonResponse
+     */
+    public function destroy(User $user): JsonResponse
     {
         return response()
             ->json([
@@ -96,14 +140,25 @@ class UsersController extends Controller
             ]);
     }
 
-    public function reset2Fa(User $user)
+    /**
+     * Reseta a configuração de autenticação em duas etapas do usuário.
+     *
+     * @param User $user Usuário que terá o 2FA redefinido.
+     * @return JsonResponse
+     */
+    public function reset2Fa(User $user): JsonResponse
     {
         return response()->json([
             'status' => $user->update(['otp_secret' => null]),
         ]);
     }
 
-    public function getRoles()
+    /**
+     * Obtém a lista de papéis disponíveis para atribuição.
+     *
+     * @return array<string, string>
+     */
+    public function getRoles(): array
     {
         return [
             User::ROLE_NORMAL => trans('users.roles.' . User::ROLE_NORMAL),

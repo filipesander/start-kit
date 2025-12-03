@@ -8,17 +8,22 @@ use App\Models\Environment;
 use App\Models\Panel\Main\Group;
 use App\Resources\Laratables\Group as LaratablesGroup;
 use Freshbitsweb\Laratables\Laratables;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades.DB;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class GroupsController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Lista os grupos, retornando JSON quando solicitado via Ajax.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response|JsonResponse
      */
-    public function index()
+    public function index(): Response|JsonResponse
     {
         if (request()->expectsJson()) {
             return Laratables::recordsOf(Group::class, LaratablesGroup::class);
@@ -28,11 +33,11 @@ class GroupsController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Renderiza o formulário de criação de grupos.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function create()
+    public function create(): Response
     {
         $environments = $this->getEnvironmentsWithModules();
 
@@ -45,12 +50,12 @@ class GroupsController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Persiste um novo grupo e seus módulos e permissões.
      *
-     * @param  \App\Http\Requests\Panel\Main\GroupRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param GroupRequest $request Dados validados do grupo.
+     * @return RedirectResponse
      */
-    public function store(GroupRequest $request)
+    public function store(GroupRequest $request): RedirectResponse
     {
         DB::transaction(function () use ($request) {
             $group = Group::create($request->only('name'));
@@ -68,12 +73,12 @@ class GroupsController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Exibe os detalhes de um grupo em modo somente leitura.
      *
-     * @param  \App\Models\Panel\Main\Group  $group
-     * @return \Illuminate\Http\Response
+     * @param Group $group Grupo que será exibido.
+     * @return Response
      */
-    public function show(Group $group)
+    public function show(Group $group): Response
     {
         $environments = $this->getEnvironmentsWithModules();
 
@@ -88,12 +93,12 @@ class GroupsController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Exibe o formulário de edição para o grupo informado.
      *
-     * @param  \App\Models\Panel\Main\Group  $group
-     * @return \Illuminate\Http\Response
+     * @param Group $group Grupo que será editado.
+     * @return Response
      */
-    public function edit(Group $group)
+    public function edit(Group $group): Response
     {
         $environments = $this->getEnvironmentsWithModules();
 
@@ -108,13 +113,13 @@ class GroupsController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza os dados do grupo sincronizando as permissões selecionadas.
      *
-     * @param  \App\Http\Requests\Panel\Main\GroupRequest  $request
-     * @param  \App\Models\Panel\Main\Group  $group
-     * @return \Illuminate\Http\Response
+     * @param GroupRequest $request Dados validados do grupo.
+     * @param Group $group Grupo que será atualizado.
+     * @return RedirectResponse
      */
-    public function update(GroupRequest $request, Group $group)
+    public function update(GroupRequest $request, Group $group): RedirectResponse
     {
         DB::transaction(function () use ($request, $group) {
             $group->update($request->except('permissions'));
@@ -132,19 +137,24 @@ class GroupsController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Exclui um grupo retornando o status da operação.
      *
-     * @param  \App\Models\Panel\Main\Group  $group
-     * @return \Illuminate\Http\Response
+     * @param Group $group Grupo que será removido.
+     * @return JsonResponse
      */
-    public function destroy(Group $group)
+    public function destroy(Group $group): JsonResponse
     {
         return response()->json([
             'status' => $group->delete(),
         ]);
     }
 
-    protected function getEnvironmentsWithModules()
+    /**
+     * Busca os ambientes com seus módulos e relacionamentos necessários.
+     *
+     * @return EloquentCollection
+     */
+    protected function getEnvironmentsWithModules(): EloquentCollection
     {
         return Environment::with([
             'modules' => function ($query) {
@@ -158,7 +168,13 @@ class GroupsController extends Controller
             ->get();
     }
 
-    protected function getPermissionsFromGroup(Group $group)
+    /**
+     * Monta as permissões configuradas para um grupo.
+     *
+     * @param Group $group Grupo alvo das permissões.
+     * @return Collection
+     */
+    protected function getPermissionsFromGroup(Group $group): Collection
     {
         return $group->modules()
             ->get()
@@ -174,7 +190,12 @@ class GroupsController extends Controller
             });
     }
 
-    protected function getProfilePermissions()
+    /**
+     * Garante permissões totais para o ambiente de perfil.
+     *
+     * @return array<int, array<string, bool>>
+     */
+    protected function getProfilePermissions(): array
     {
         $profileEnvironment = Environment::whereSlug('profile')->first();
 

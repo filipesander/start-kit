@@ -17,7 +17,10 @@ use Inertia\Response;
 class NewPasswordController extends Controller
 {
     /**
-     * Display the password reset view.
+     * Exibe a tela de redefinição de senha.
+     *
+     * @param Request $request Requisição contendo e-mail e token.
+     * @return Response
      */
     public function create(Request $request): Response
     {
@@ -28,7 +31,10 @@ class NewPasswordController extends Controller
     }
 
     /**
-     * Handle an incoming new password request.
+     * Processa uma solicitação de redefinição de senha.
+     *
+     * @param Request $request Requisição com token, e-mail e nova senha.
+     * @return RedirectResponse
      *
      * @throws \Illuminate\Validation\ValidationException
      */
@@ -40,9 +46,7 @@ class NewPasswordController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        // Here we will attempt to reset the user's password. If it is successful we
-        // will update the password on an actual user model and persist it to the
-        // database. Otherwise we will parse the error and return the response.
+        // Tenta redefinir a senha do usuário e persiste a alteração em caso de sucesso.
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user) use ($request) {
@@ -55,9 +59,7 @@ class NewPasswordController extends Controller
             }
         );
 
-        // If the password was successfully reset, we will redirect the user back to
-        // the application's home authenticated view. If there is an error we can
-        // redirect them back to where they came from with their error message.
+        // Redireciona para a tela de login ao concluir a redefinição ou lança erros.
         if ($status == Password::PASSWORD_RESET) {
             return redirect()->route('login')->with('status', __($status));
         }

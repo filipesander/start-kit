@@ -13,7 +13,9 @@ use Inertia\Response;
 class PasswordResetLinkController extends Controller
 {
     /**
-     * Display the password reset link request view.
+     * Exibe o formulário para solicitar o link de redefinição de senha.
+     *
+     * @return Response
      */
     public function create(): Response
     {
@@ -23,7 +25,10 @@ class PasswordResetLinkController extends Controller
     }
 
     /**
-     * Handle an incoming password reset link request.
+     * Processa um pedido de envio do link de redefinição de senha.
+     *
+     * @param Request $request Requisição contendo o e-mail de recuperação.
+     * @return RedirectResponse
      *
      * @throws \Illuminate\Validation\ValidationException
      */
@@ -33,9 +38,7 @@ class PasswordResetLinkController extends Controller
             'email' => 'required|email',
         ]);
 
-        // We will send the password reset link to this user. Once we have attempted
-        // to send the link, we will examine the response then see the message we
-        // need to show to the user. Finally, we'll send out a proper response.
+        // Tenta enviar o link de redefinição e retorna a mensagem adequada ao usuário.
         $status = Password::sendResetLink(
             $request->only('email')
         );

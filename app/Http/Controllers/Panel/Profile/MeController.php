@@ -3,20 +3,35 @@
 namespace App\Http\Controllers\Panel\Profile;
 
 use App\Http\Controllers\Panel\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class MeController extends Controller
 {
-    public function edit()
+    /**
+     * Renderiza a página de edição dos dados do usuário autenticado.
+     *
+     * @return Response
+     */
+    public function edit(): Response
     {
         return Inertia::render('Profile/Me');
     }
 
-    public function update(Request $request)
+    /**
+     * Atualiza o perfil do usuário validando senha e campos sensíveis.
+     *
+     * @param Request $request Requisição com os dados atualizados do perfil.
+     * @return RedirectResponse
+     *
+     * @throws ValidationException
+     */
+    public function update(Request $request): RedirectResponse
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',

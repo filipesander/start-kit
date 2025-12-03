@@ -23,7 +23,9 @@ class RegisteredUserController extends Controller
     protected $guard = 'panel';
 
     /**
-     * Display the registration view.
+     * Exibe a tela de registro de novos usuários.
+     *
+     * @return Response
      */
     public function create(): Response
     {
@@ -31,7 +33,10 @@ class RegisteredUserController extends Controller
     }
 
     /**
-     * Handle an incoming registration request.
+     * Processa uma solicitação de registro de usuário.
+     *
+     * @param Request $request Dados informados pelo novo usuário.
+     * @return RedirectResponse
      *
      * @throws \Illuminate\Validation\ValidationException
      */

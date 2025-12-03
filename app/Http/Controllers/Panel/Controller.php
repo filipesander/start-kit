@@ -3,13 +3,18 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller as BaseController;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
+use Symfony\Component\HttpFoundation\Response;
 
 class Controller extends BaseController
 {
-    public function __invoke()
+    /**
+     * Redireciona o usuário autenticado para o primeiro módulo disponível.
+     *
+     * @return RedirectResponse
+     */
+    public function __invoke(): RedirectResponse
     {
         if (!Auth::check()) {
             return redirect()
@@ -31,13 +36,13 @@ class Controller extends BaseController
     }
 
     /**
-     * Execute an action on the controller.
+     * Executa a ação solicitada garantindo que o usuário tenha permissão.
      *
-     * @param  string  $method
-     * @param  array  $parameters
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param string $method
+     * @param array $parameters
+     * @return Response
      */
-    public function callAction($method, $parameters)
+    public function callAction($method, $parameters): Response
     {
         if (Auth::check() && isset($this->resourceAbilityMap()[$method])) {
             $this->authorize($this->resourceAbilityMap()[$method]);
@@ -47,11 +52,11 @@ class Controller extends BaseController
     }
 
     /**
-     * Get the map of resource methods to ability names.
+     * Retorna o mapa entre métodos REST e as habilidades autorizáveis.
      *
-     * @return array
+     * @return array<string, string>
      */
-    protected function resourceAbilityMap()
+    protected function resourceAbilityMap(): array
     {
         return [
             'index' => 'read',

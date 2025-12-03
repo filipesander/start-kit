@@ -8,20 +8,33 @@ use App\Models\Panel\Main\Company;
 use App\Models\Panel\Main\User;
 use App\Resources\Laratables\Company as LaratablesCompany;
 use Freshbitsweb\Laratables\Laratables;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class CompaniesController extends Controller
 {
+    /**
+     * Configura o middleware necessário para proteger as rotas do controlador.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $this->middleware('superadmin')->except(['switchCompany', 'getAvailableCompanies']);
     }
 
-    public function index()
+    /**
+     * Lista as empresas, retornando JSON ou a página Inertia correspondente.
+     *
+     * @return Response|JsonResponse
+     */
+    public function index(): Response|JsonResponse
     {
         if (request()->expectsJson()) {
             return Laratables::recordsOf(Company::class, LaratablesCompany::class);
@@ -30,7 +43,12 @@ class CompaniesController extends Controller
         return Inertia::render('Main/Companies/List');
     }
 
-    public function getAvailableCompanies()
+    /**
+     * Retorna as empresas disponíveis para o usuário atual em formato JSON.
+     *
+     * @return JsonResponse
+     */
+    public function getAvailableCompanies(): JsonResponse
     {
         $user = auth()->user();
 
@@ -46,7 +64,12 @@ class CompaniesController extends Controller
         ]);
     }
 
-    public function create()
+    /**
+     * Renderiza a tela de criação de empresa.
+     *
+     * @return Response
+     */
+    public function create(): Response
     {
         return Inertia::render('Main/Companies/Edit', [
             'company' => null,
@@ -54,7 +77,13 @@ class CompaniesController extends Controller
         ]);
     }
 
-    public function store(CompanyRequest $request)
+    /**
+     * Persiste uma nova empresa e associa o usuário autenticado como proprietário.
+     *
+     * @param CompanyRequest $request Dados validados da empresa.
+     * @return RedirectResponse
+     */
+    public function store(CompanyRequest $request): RedirectResponse
     {
         $company = DB::transaction(function () use ($request) {
             $data = $request->except('logo');
@@ -75,13 +104,25 @@ class CompaniesController extends Controller
             ->with('success', 'Empresa registrada com sucesso!');
     }
 
-    public function show(Company $company)
+    /**
+     * Redireciona para a tela de edição da empresa selecionada.
+     *
+     * @param Company $company Empresa selecionada.
+     * @return RedirectResponse
+     */
+    public function show(Company $company): RedirectResponse
     {
         return redirect()
             ->route('panel.main.companies.edit', [$company->id]);
     }
 
-    public function edit(Company $company)
+    /**
+     * Exibe o formulário de edição de uma empresa.
+     *
+     * @param Company $company Empresa a ser editada.
+     * @return Response
+     */
+    public function edit(Company $company): Response
     {
         $company->load('users:id,name,email');
 
@@ -91,7 +132,14 @@ class CompaniesController extends Controller
         ]);
     }
 
-    public function update(CompanyRequest $request, Company $company)
+    /**
+     * Atualiza os dados da empresa, incluindo upload do logotipo.
+     *
+     * @param CompanyRequest $request Dados validados da empresa.
+     * @param Company $company Empresa que será atualizada.
+     * @return RedirectResponse
+     */
+    public function update(CompanyRequest $request, Company $company): RedirectResponse
     {
         DB::transaction(function () use ($request, $company) {
             $data = $request->except('logo');
@@ -114,7 +162,13 @@ class CompaniesController extends Controller
             ->with('success', 'Empresa atualizada com sucesso!');
     }
 
-    public function destroy(Company $company)
+    /**
+     * Remove uma empresa e seu logotipo, retornando o status da operação.
+     *
+     * @param Company $company Empresa que será removida.
+     * @return JsonResponse
+     */
+    public function destroy(Company $company): JsonResponse
     {
         if ($company->logo) {
             Storage::disk('public')->delete($company->logo);
@@ -126,7 +180,13 @@ class CompaniesController extends Controller
             ]);
     }
 
-    public function switchCompany(Request $request)
+    /**
+     * Troca a empresa corrente do usuário caso haja permissão.
+     *
+     * @param Request $request Requisição contendo o identificador da empresa.
+     * @return JsonResponse
+     */
+    public function switchCompany(Request $request): JsonResponse
     {
         if (!$request->filled('company_id')) {
             return response()->json([
@@ -187,7 +247,14 @@ class CompaniesController extends Controller
         ]);
     }
 
-    public function addUser(Request $request, Company $company)
+    /**
+     * Vincula um usuário à empresa, indicando também o vínculo de proprietários.
+     *
+     * @param Request $request Dados do vínculo entre usuário e empresa.
+     * @param Company $company Empresa que receberá o usuário.
+     * @return JsonResponse
+     */
+    public function addUser(Request $request, Company $company): JsonResponse
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
@@ -206,7 +273,15 @@ class CompaniesController extends Controller
         ]);
     }
 
-    public function removeUser(Request $request, Company $company, User $user)
+    /**
+     * Remove o vínculo de um usuário com a empresa informada.
+     *
+     * @param Request $request Dados da requisição (mantido para consistência).
+     * @param Company $company Empresa da qual o usuário será removido.
+     * @param User $user Usuário a ser desvinculado.
+     * @return JsonResponse
+     */
+    public function removeUser(Request $request, Company $company, User $user): JsonResponse
     {
         $company->users()->detach($user->id);
 

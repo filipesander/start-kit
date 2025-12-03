@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Panel\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +18,9 @@ class ConfirmablePasswordController extends Controller
     protected $guard = 'panel';
 
     /**
-     * Show the confirm password view.
+     * Exibe o formulário para confirmação de senha.
+     *
+     * @return Response
      */
     public function show(): Response
     {
@@ -27,7 +28,12 @@ class ConfirmablePasswordController extends Controller
     }
 
     /**
-     * Confirm the user's password.
+     * Valida a senha do usuário antes de operações sensíveis.
+     *
+     * @param Request $request Requisição contendo a senha do usuário.
+     * @return RedirectResponse
+     *
+     * @throws ValidationException
      */
     public function store(Request $request): RedirectResponse
     {

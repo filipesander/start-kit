@@ -3,14 +3,16 @@
 namespace App\Http\Controllers\Panel\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class EmailVerificationNotificationController extends Controller
 {
     /**
-     * Send a new email verification notification.
+     * Envia novamente a notificação de verificação de e-mail.
+     *
+     * @param Request $request Requisição do usuário autenticado.
+     * @return RedirectResponse
      */
     public function store(Request $request): RedirectResponse
     {

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Panel\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -12,7 +11,10 @@ use Inertia\Response;
 class EmailVerificationPromptController extends Controller
 {
     /**
-     * Display the email verification prompt.
+     * Exibe o aviso para verificação de e-mail.
+     *
+     * @param Request $request Requisição do usuário autenticado.
+     * @return RedirectResponse|Response
      */
     public function __invoke(Request $request): RedirectResponse|Response
     {
