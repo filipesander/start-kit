@@ -50,6 +50,8 @@ class CompaniesController extends Controller
      */
     public function getAvailableCompanies(): JsonResponse
     {
+        $this->authorize('read');
+
         $user = auth()->user();
 
         if ($user->isSuperAdmin()) {
@@ -188,6 +190,8 @@ class CompaniesController extends Controller
      */
     public function switchCompany(Request $request): JsonResponse
     {
+        $this->authorize('update');
+
         if (!$request->filled('company_id')) {
             return response()->json([
                 'message' => 'O ID da empresa é obrigatório.',
@@ -256,6 +260,8 @@ class CompaniesController extends Controller
      */
     public function addUser(Request $request, Company $company): JsonResponse
     {
+        $this->authorize('update');
+
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'is_owner' => 'boolean',
@@ -283,6 +289,8 @@ class CompaniesController extends Controller
      */
     public function removeUser(Request $request, Company $company, User $user): JsonResponse
     {
+        $this->authorize('update');
+
         $company->users()->detach($user->id);
 
         return response()->json([

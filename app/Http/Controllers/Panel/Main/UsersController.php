@@ -148,6 +148,8 @@ class UsersController extends Controller
      */
     public function reset2Fa(User $user): JsonResponse
     {
+        $this->authorize('update');
+
         return response()->json([
             'status' => $user->update(['otp_secret' => null]),
         ]);
@@ -160,6 +162,8 @@ class UsersController extends Controller
      */
     public function getRoles(): array
     {
+        $this->authorize('read');
+
         return [
             User::ROLE_NORMAL => trans('users.roles.' . User::ROLE_NORMAL),
             User::ROLE_DIRECTOR => trans('users.roles.' . User::ROLE_DIRECTOR),
