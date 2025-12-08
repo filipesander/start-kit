@@ -23,7 +23,7 @@ class GroupsController extends Controller
      *
      * @return Response|JsonResponse
      */
-    public function index(): Response|JsonResponse
+    public function index()
     {
         if (request()->expectsJson()) {
             return Laratables::recordsOf(Group::class, LaratablesGroup::class);

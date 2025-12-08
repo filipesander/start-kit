@@ -34,7 +34,7 @@ class CompaniesController extends Controller
      *
      * @return Response|JsonResponse
      */
-    public function index(): Response|JsonResponse
+    public function index()
     {
         if (request()->expectsJson()) {
             return Laratables::recordsOf(Company::class, LaratablesCompany::class);
@@ -243,6 +243,9 @@ class CompaniesController extends Controller
 
         $user->update(['company_id' => $companyId]);
         $user->setRelation('company', $company);
+
+        // Clear any cached data that might be company-specific
+        Cache::flush();
 
         return response()->json([
             'status' => true,

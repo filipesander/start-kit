@@ -2,6 +2,7 @@
 
 namespace App\Models\Panel\Main;
 
+use App\Models\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,7 +12,7 @@ use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 
 class User extends Authenticatable implements AuditableContract
 {
-    use Auditable, HasApiTokens, HasFactory, Notifiable;
+    use Auditable, HasApiTokens, HasFactory, Notifiable, BelongsToCompany;
 
     public const ROLE_NORMAL = 0;
     public const ROLE_DIRECTOR = 1;
@@ -29,6 +30,9 @@ class User extends Authenticatable implements AuditableContract
         'email',
         'password',
         'otp_secret',
+        'company_id',
+        'original_company_id',
+        'role',
     ];
 
     /**

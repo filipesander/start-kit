@@ -20,14 +20,17 @@ class DetectCurrentEnvironmentAndModule
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Route::currentRouteName() === 'panel.index') {
+        $routeName = Route::currentRouteName();
+
+        if ($routeName === 'panel.index' || str_ends_with($routeName, '.switch')) {
             return $next($request);
         }
 
-        $parts = explode('.', Route::currentRouteName());
+        $parts = explode('.', $routeName);
 
         if (count($parts) <= 4) {
             [$root, $environmentSlug, $moduleSlug, $action] = array_pad($parts, 4, null);
+            $parentSlug = null;
         } else {
             [$root, $environmentSlug, $parentSlug, $moduleSlug, $action] = $parts;
         }

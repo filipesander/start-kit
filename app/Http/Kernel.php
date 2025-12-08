@@ -55,6 +55,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\Authenticated\GenerateMenu::class,
             \App\Http\Middleware\SuperAdminSession::class,
             \App\Http\Middleware\CompanySession::class,
+            \App\Http\Middleware\EnsureDataTablesParameters::class,
 
             'inertia:panel',
         ],

@@ -37,10 +37,16 @@ class AuthServiceProvider extends ServiceProvider
         foreach (['read', 'create', 'update', 'delete'] as $permission) {
             Gate::define($permission, function (User $user, $module = null) use ($permission) {
                 if (is_null($module)) {
+                    if (!$user->currentEnvironment || !$user->currentModule) {
+                        return $user->isSuperAdmin();
+                    }
                     return (bool) ($user->permissions[$user->currentEnvironment->slug][$user->currentModule->slug][$permission] ?? false);
                 }
 
                 if (is_string($module)) {
+                    if (!$user->currentEnvironment) {
+                        return $user->isSuperAdmin();
+                    }
                     if ($module = $user->modules->firstWhere('slug', $module)) {
                         return (bool) ($user->permissions[$user->currentEnvironment->slug][$module->slug][$permission] ?? false);
                     }
@@ -49,6 +55,9 @@ class AuthServiceProvider extends ServiceProvider
                 }
 
                 if ($module instanceof Module) {
+                    if (!$user->currentEnvironment) {
+                        return $user->isSuperAdmin();
+                    }
                     return (bool) ($user->permissions[$user->currentEnvironment->slug][$module->slug][$permission] ?? false);
                 }
 

@@ -3,6 +3,7 @@
 namespace App\Models\Panel\Main;
 
 use App\Models\Module;
+use App\Models\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Auditable;
@@ -10,7 +11,7 @@ use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 
 class Group extends Model implements AuditableContract
 {
-    use Auditable, HasFactory;
+    use Auditable, HasFactory, BelongsToCompany;
 
     /**
      * The attributes that are mass assignable.
@@ -19,6 +20,7 @@ class Group extends Model implements AuditableContract
      */
     protected $fillable = [
         'name',
+        'company_id',
     ];
 
     public function modules()

@@ -40,9 +40,9 @@ class Controller extends BaseController
      *
      * @param string $method
      * @param array $parameters
-     * @return Response
+     * @return mixed
      */
-    public function callAction($method, $parameters): Response
+    public function callAction($method, $parameters): mixed
     {
         if (Auth::check() && isset($this->resourceAbilityMap()[$method])) {
             $this->authorize($this->resourceAbilityMap()[$method]);

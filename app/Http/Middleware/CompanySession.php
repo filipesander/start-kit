@@ -17,6 +17,9 @@ class CompanySession
             return $next($request);
         }
 
+        // Load the current company relationship
+        $user->load('company');
+
         $companyGroup = CompanyGroup::whereJsonContains('companies', $user->company_id)->first();
 
         if (!$companyGroup && $user->original_company_id) {

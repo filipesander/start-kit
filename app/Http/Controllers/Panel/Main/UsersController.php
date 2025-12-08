@@ -22,7 +22,7 @@ class UsersController extends Controller
      *
      * @return Response|JsonResponse
      */
-    public function index(): Response|JsonResponse
+    public function index()
     {
         if (request()->expectsJson()) {
             return Laratables::recordsOf(User::class, LaratablesUser::class);
