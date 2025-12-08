@@ -14,6 +14,14 @@ class Group extends Model implements AuditableContract
     use Auditable, HasFactory, BelongsToCompany;
 
     /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return \Database\Factories\Panel\Main\GroupFactory::new();
+    }
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>

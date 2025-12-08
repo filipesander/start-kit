@@ -12,6 +12,14 @@ class Company extends Model implements AuditableContract
 {
     use Auditable, HasFactory, SoftDeletes;
 
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return \Database\Factories\Panel\Main\CompanyFactory::new();
+    }
+
     protected $fillable = [
         'name',
         'cnpj',
