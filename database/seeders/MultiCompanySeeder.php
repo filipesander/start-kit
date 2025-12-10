@@ -17,23 +17,41 @@ class MultiCompanySeeder extends Seeder
     {
         $this->command->info('🚀 Iniciando seed de múltiplas empresas...');
 
-        // Desabilitar temporariamente o scope global
-        User::withoutGlobalScope(\App\Models\Scopes\CompanyScope::class, function () {
-            Group::withoutGlobalScope(\App\Models\Scopes\CompanyScope::class, function () {
-                $this->createCompaniesWithUsersAndGroups();
-            });
-        });
+        // Criar empresas, usuários e grupos
+        // Nota: CompanyScope não é aplicado no CLI (sem usuário autenticado)
+        $this->createCompaniesWithUsersAndGroups();
 
         $this->command->info('✅ Seed concluído com sucesso!');
     }
 
     private function createCompaniesWithUsersAndGroups(): void
     {
+        // Buscar ou criar grupo Administrador (com todos os módulos)
+        $adminGroup = Group::firstOrCreate(['name' => 'Administrador']);
+
+        if ($adminGroup->wasRecentlyCreated) {
+            $modules = \App\Models\Module::get()
+                ->mapWithKeys(function ($module) {
+                    return [
+                        $module->id => [
+                            'create' => true,
+                            'read' => true,
+                            'update' => true,
+                            'delete' => true,
+                        ],
+                    ];
+                });
+            $adminGroup->modules()->attach($modules);
+        }
+
         // Criar super admin (sem empresa)
         $superAdmin = User::factory()->superAdmin()->create([
             'name' => 'Super Admin',
             'email' => 'admin@system.com',
         ]);
+
+        // Associar super admin ao grupo Administrador
+        $superAdmin->groups()->syncWithoutDetaching([$adminGroup->id]);
         $this->command->info("✓ Super Admin criado: {$superAdmin->email}");
 
         // Criar 3 empresas de teste
@@ -48,7 +66,7 @@ class MultiCompanySeeder extends Seeder
             $this->command->info("\n📦 Empresa criada: {$company->name}");
 
             // Criar grupos para esta empresa
-            $groups = [
+            $groups = collect([
                 Group::factory()->create([
                     'name' => 'Administradores',
                     'company_id' => $company->id,
@@ -61,7 +79,7 @@ class MultiCompanySeeder extends Seeder
                     'name' => 'Colaboradores',
                     'company_id' => $company->id,
                 ]),
-            ];
+            ]);
 
             $this->command->info("  ✓ {$groups->count()} grupos criados");
 
@@ -73,8 +91,11 @@ class MultiCompanySeeder extends Seeder
                 'original_company_id' => $company->id,
             ]);
 
-            // Vincular admin aos grupos
-            $admin->groups()->attach($groups->pluck('id'));
+            // Vincular admin ao grupo Administrador global e aos grupos da empresa
+            $admin->groups()->attach(array_merge(
+                [$adminGroup->id],
+                $groups->pluck('id')->toArray()
+            ));
             $this->command->info("  ✓ Administrador: {$admin->email} (senha: password)");
 
             // Criar gerentes (2 por empresa)

@@ -14,6 +14,14 @@ class User extends Authenticatable implements AuditableContract
 {
     use Auditable, HasApiTokens, HasFactory, Notifiable, BelongsToCompany;
 
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return \Database\Factories\UserFactory::new();
+    }
+
     public const ROLE_NORMAL = 0;
     public const ROLE_DIRECTOR = 1;
     public const ROLE_ADMINISTRATOR = 2;
